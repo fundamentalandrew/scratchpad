@@ -1,0 +1,24 @@
+{
+  "name": "bigquery-cost",
+  "version": "1.0.0",
+  "description": "BigQuery FinOps Cost Analytics CLI — audit and analyze Google BigQuery compute costs",
+  "main": "bq-analyzer.js",
+  "bin": {
+    "bq-analyzer": "./bq-analyzer.js"
+  },
+  "scripts": {
+    "start": "node bq-analyzer.js"
+  },
+  "keywords": [
+    "bigquery",
+    "finops",
+    "cost-analytics",
+    "gcp"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/bigquery": "^8.1.1",
+    "commander": "^14.0.3",
+    "csv-writer": "^1.6.0"
+  }
+}
