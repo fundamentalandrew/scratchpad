@@ -4,7 +4,9 @@ function aggregateUserSpend(resultSets) {
   const map = new Map();
 
   for (const rows of resultSets) {
+    if (!rows) continue;
     for (const row of rows) {
+      if (!row || !row.user_email) continue;
       const key = row.user_email;
       if (map.has(key)) {
         const existing = map.get(key);
@@ -30,7 +32,9 @@ function aggregateQueryPatterns(resultSets) {
   const map = new Map();
 
   for (const rows of resultSets) {
+    if (!rows) continue;
     for (const row of rows) {
+      if (!row || !row.normalized_blueprint) continue;
       const key = row.normalized_blueprint;
       if (map.has(key)) {
         const existing = map.get(key);
@@ -78,7 +82,9 @@ function aggregateUserQueryMatrix(resultSets) {
   const map = new Map();
 
   for (const rows of resultSets) {
+    if (!rows) continue;
     for (const row of rows) {
+      if (!row || !row.user_email || !row.normalized_blueprint) continue;
       const key = `${row.user_email}::${row.normalized_blueprint}`;
       if (map.has(key)) {
         const existing = map.get(key);

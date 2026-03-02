@@ -27,7 +27,7 @@ async function main() {
     }
   }
 
-  const { succeeded, total } = await executeQueries(querySets);
+  const { succeeded, failed, total } = await executeQueries(querySets);
 
   if (succeeded.length === 0) {
     console.error('Error: All project/region combinations failed. No data retrieved.');
@@ -48,6 +48,10 @@ async function main() {
   const matrixResult = await writeUserQueryMatrix(userQueryMatrix);
 
   console.log('');
+  if (failed.length > 0) {
+    console.log(`Warning: ${failed.length} of ${total} project/region combinations failed.`);
+  }
+  console.log(`Results from ${succeeded.length} of ${total} project/region combinations.`);
   console.log('Reports written to ./reports/');
   console.log(`  - spend_per_user.csv (${spendResult.count} users)`);
   console.log(`  - top_normalized_queries.csv (${patternsResult.count} patterns)`);

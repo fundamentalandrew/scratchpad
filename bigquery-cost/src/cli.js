@@ -27,17 +27,22 @@ function parseArgs(argv) {
     process.exit(1);
   }
 
-  const startDate = new Date(opts.startDate);
-  const endDate = new Date(opts.endDate);
+  function validateDate(dateStr, flag) {
+    const d = new Date(dateStr + 'T00:00:00');
+    if (isNaN(d.getTime())) {
+      console.error(`Error: Invalid date for ${flag}: "${dateStr}"`);
+      process.exit(1);
+    }
+    const roundTrip = d.toISOString().slice(0, 10);
+    if (roundTrip !== dateStr) {
+      console.error(`Error: Invalid date for ${flag}: "${dateStr}" (resolved to ${roundTrip})`);
+      process.exit(1);
+    }
+    return d;
+  }
 
-  if (isNaN(startDate.getTime())) {
-    console.error(`Error: Invalid date for --start-date: "${opts.startDate}"`);
-    process.exit(1);
-  }
-  if (isNaN(endDate.getTime())) {
-    console.error(`Error: Invalid date for --end-date: "${opts.endDate}"`);
-    process.exit(1);
-  }
+  const startDate = validateDate(opts.startDate, '--start-date');
+  const endDate = validateDate(opts.endDate, '--end-date');
 
   if (startDate > endDate) {
     console.error(`Error: --start-date (${opts.startDate}) must be before or equal to --end-date (${opts.endDate})`);

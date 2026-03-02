@@ -3,17 +3,25 @@
 const COST_FORMULA = '(total_bytes_billed / POWER(1024, 4)) * 6.25';
 const TIB_FORMULA = 'total_bytes_billed / POWER(1024, 4)';
 
+function validateIdentifier(value, label) {
+  if (!/^[a-zA-Z0-9_-]+$/.test(value)) {
+    throw new Error(`Invalid ${label}: "${value}" contains disallowed characters`);
+  }
+}
+
 function buildFromClause(projectId, region) {
+  validateIdentifier(projectId, 'project ID');
+  validateIdentifier(region, 'region');
   return `\`${projectId}\`.\`region-${region}\`.INFORMATION_SCHEMA.JOBS_BY_PROJECT`;
 }
 
 function buildWhereClause() {
   return `
   WHERE creation_time >= TIMESTAMP(@startDate)
-    AND creation_time <= TIMESTAMP(CONCAT(@endDate, ' 23:59:59'))
+    AND creation_time < TIMESTAMP(DATE_ADD(DATE(@endDate), INTERVAL 1 DAY))
     AND job_type = 'QUERY'
     AND state = 'DONE'
-    AND cache_hit != TRUE
+    AND cache_hit IS NOT TRUE
     AND statement_type != 'SCRIPT'`;
 }
 
@@ -55,10 +63,7 @@ SELECT
   SUM(${COST_FORMULA}) AS estimated_cost_usd
 FROM ${from}
 ${where}
-GROUP BY normalized_blueprint
-HAVING COUNT(*) > 5
-ORDER BY estimated_cost_usd DESC
-LIMIT 100`;
+GROUP BY normalized_blueprint`;
 
   return query;
 }
@@ -86,29 +91,16 @@ function generateUserQueryMatrixQuery(projectId, region) {
   const blueprint = buildNormalizedBlueprint();
 
   const query = `
-WITH ranked AS (
-  SELECT
-    user_email,
-    ${blueprint},
-    COUNT(*) AS execution_count,
-    SUM(${TIB_FORMULA}) AS total_tib_billed,
-    SUM(total_bytes_billed) AS total_bytes_billed,
-    SUM(${COST_FORMULA}) AS estimated_cost_usd,
-    ROW_NUMBER() OVER(PARTITION BY user_email ORDER BY SUM(total_bytes_billed) DESC) AS query_rank
-  FROM ${from}
-  ${where}
-  GROUP BY user_email, normalized_blueprint
-)
 SELECT
   user_email,
-  query_rank,
-  normalized_blueprint,
-  execution_count,
-  total_bytes_billed,
-  estimated_cost_usd
-FROM ranked
-WHERE query_rank <= 5
-ORDER BY user_email, query_rank`;
+  ${blueprint},
+  COUNT(*) AS execution_count,
+  SUM(${TIB_FORMULA}) AS total_tib_billed,
+  SUM(total_bytes_billed) AS total_bytes_billed,
+  SUM(${COST_FORMULA}) AS estimated_cost_usd
+FROM ${from}
+${where}
+GROUP BY user_email, normalized_blueprint`;
 
   return query;
 }
