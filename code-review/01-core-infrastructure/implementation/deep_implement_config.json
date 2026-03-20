@@ -1,0 +1,30 @@
+{
+  "plugin_root": "/Users/andrew/.claude/plugins/cache/piercelamb-plugins/deep-implement/0.2.1",
+  "sections_dir": "/Users/andrew/Code/scratchpad/code-review/01-core-infrastructure/sections",
+  "target_dir": "/Users/andrew/Code/scratchpad/code-review/01-core-infrastructure",
+  "state_dir": "/Users/andrew/Code/scratchpad/code-review/01-core-infrastructure/implementation",
+  "git_root": "/Users/andrew/Code/scratchpad",
+  "commit_style": "simple",
+  "test_command": "uv run pytest",
+  "sections": [
+    "section-01-project-setup",
+    "section-02-shared-types",
+    "section-03-config-system",
+    "section-04-utils",
+    "section-05-claude-client",
+    "section-06-github-client",
+    "section-07-pipeline",
+    "section-08-commands",
+    "section-09-integration"
+  ],
+  "sections_state": {},
+  "pre_commit": {
+    "present": false,
+    "type": "none",
+    "config_file": null,
+    "native_hook": null,
+    "may_modify_files": false,
+    "detected_formatters": []
+  },
+  "created_at": "2026-03-20T13:32:52.852787+00:00"
+}
