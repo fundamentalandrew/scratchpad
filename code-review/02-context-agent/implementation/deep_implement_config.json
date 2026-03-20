@@ -33,6 +33,10 @@
     "section-04-issue-parser": {
       "status": "complete",
       "commit_hash": "24f286d"
+    },
+    "section-05-domain-rules-loader": {
+      "status": "complete",
+      "commit_hash": "85b0acd"
     }
   },
   "pre_commit": {

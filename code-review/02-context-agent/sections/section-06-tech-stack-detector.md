@@ -11,13 +11,14 @@ This section implements the `detectTechStack()` function in `02-context-agent/sr
 
 Both dependencies must be implemented before this section can run end-to-end, but tests can be written immediately using mocks.
 
-## File to Create
+## Actual Files Created
 
-`/home/andrew/code/scratchpad/code-review/02-context-agent/src/tech-stack.ts`
+- `/home/andrew/code/scratchpad/code-review/01-core-infrastructure/src/context/tech-stack.ts`
+- `/home/andrew/code/scratchpad/code-review/01-core-infrastructure/src/context/tech-stack.test.ts`
 
-## Test File to Create
+**Deviation from plan:** Files placed in `01-core-infrastructure/src/context/` instead of `02-context-agent/src/` — same rationale as section 05 (no separate package infrastructure exists).
 
-`/home/andrew/code/scratchpad/code-review/02-context-agent/src/tech-stack.test.ts`
+## Tests: 13 passing
 
 ---
 
