@@ -7,6 +7,20 @@ import type { Logger } from "../utils/logger.js";
 
 const ThrottledOctokit = Octokit.plugin(throttling, retry);
 
+const SENSITIVE_EXTENSIONS = [".pem", ".key", ".p12", ".pfx"];
+const SENSITIVE_NAMES = ["id_rsa", "id_ed25519", ".credentials", "credentials.json"];
+
+function isSensitivePath(filePath: string): boolean {
+  const basename = filePath.split("/").pop() ?? filePath;
+  if (basename.endsWith(".env") || basename.startsWith(".env.")) return true;
+  if (basename.startsWith("secrets.")) return true;
+  if (SENSITIVE_NAMES.includes(basename)) return true;
+  for (const ext of SENSITIVE_EXTENSIONS) {
+    if (basename.endsWith(ext)) return true;
+  }
+  return false;
+}
+
 export function resolveGitHubToken(config: { githubToken?: string }, logger: Logger): string {
   if (process.env.GITHUB_TOKEN) {
     return process.env.GITHUB_TOKEN;
@@ -61,6 +75,8 @@ export class GitHubClient {
     state: string;
     baseBranch: string;
     headBranch: string;
+    headSha: string;
+    baseSha: string;
   }> {
     this.logger.verbose(`GitHub API: getPR(${owner}/${repo}#${number})`);
     try {
@@ -72,6 +88,8 @@ export class GitHubClient {
         state: data.state,
         baseBranch: data.base.ref,
         headBranch: data.head.ref,
+        headSha: data.head.sha,
+        baseSha: data.base.sha,
       };
     } catch (e) {
       throw new GitHubAPIError(`getPR(${owner}/${repo}#${number}) failed: ${(e as Error).message}`, { cause: e as Error });
@@ -84,6 +102,7 @@ export class GitHubClient {
     additions: number;
     deletions: number;
     patch?: string | null;
+    previousPath?: string;
   }>> {
     this.logger.verbose(`GitHub API: getPRFiles(${owner}/${repo}#${number})`);
     try {
@@ -99,6 +118,7 @@ export class GitHubClient {
         additions: f.additions as number,
         deletions: f.deletions as number,
         patch: f.patch as string | null | undefined,
+        previousPath: f.previous_filename as string | undefined,
       }));
     } catch (e) {
       throw new GitHubAPIError(`getPRFiles(${owner}/${repo}#${number}) failed: ${(e as Error).message}`, { cause: e as Error });
@@ -132,6 +152,107 @@ export class GitHubClient {
     } catch (e) {
       throw new GitHubAPIError(`postPRComment(${owner}/${repo}#${number}) failed: ${(e as Error).message}`, { cause: e as Error });
     }
+  }
+
+  async getFileContent(owner: string, repo: string, path: string, ref?: string): Promise<string | null> {
+    if (isSensitivePath(path)) {
+      this.logger.warn(`Skipping sensitive file: ${path}`);
+      return null;
+    }
+    this.logger.verbose(`GitHub API: getFileContent(${owner}/${repo}/${path}${ref ? `@${ref}` : ""})`);
+    try {
+      const { data } = await this.octokit.rest.repos.getContent({
+        owner,
+        repo,
+        path,
+        ...(ref ? { ref } : {}),
+      });
+      if (Array.isArray(data)) return null;
+      if ((data as { type: string }).type !== "file") return null;
+      const content = (data as { content: string }).content;
+      return Buffer.from(content, "base64").toString("utf-8");
+    } catch (e) {
+      if ((e as { status?: number }).status === 404) return null;
+      throw new GitHubAPIError(`getFileContent(${owner}/${repo}/${path}) failed: ${(e as Error).message}`, { cause: e as Error });
+    }
+  }
+
+  async getReviewComments(owner: string, repo: string, prNumber: number): Promise<Array<{
+    id: number;
+    author: string;
+    body: string;
+    path?: string;
+    line?: number;
+    createdAt: string;
+  }>> {
+    this.logger.verbose(`GitHub API: getReviewComments(${owner}/${repo}#${prNumber})`);
+    try {
+      const comments = await this.octokit.paginate(this.octokit.rest.pulls.listReviewComments, {
+        owner,
+        repo,
+        pull_number: prNumber,
+        per_page: 100,
+      });
+      return (comments as Array<Record<string, unknown>>).map((c) => ({
+        id: c.id as number,
+        author: (c.user as { login: string })?.login ?? "unknown",
+        body: c.body as string,
+        path: c.path as string | undefined,
+        line: (c.original_line ?? c.line) as number | undefined,
+        createdAt: c.created_at as string,
+      }));
+    } catch (e) {
+      if ((e as { status?: number }).status === 403) {
+        this.logger.warn(`Insufficient permissions to fetch review comments for ${owner}/${repo}#${prNumber}`);
+        return [];
+      }
+      throw new GitHubAPIError(`getReviewComments(${owner}/${repo}#${prNumber}) failed: ${(e as Error).message}`, { cause: e as Error });
+    }
+  }
+
+  async getReferencedIssues(
+    owner: string,
+    repo: string,
+    issueNumbers: number[],
+    crossRepoRefs?: Array<{ owner: string; repo: string; number: number }>,
+  ): Promise<Array<{ number: number; title: string; state: string; body?: string; owner?: string; repo?: string }>> {
+    const tasks: Array<{ owner: string; repo: string; number: number; isCrossRepo: boolean }> = [
+      ...issueNumbers.map((n) => ({ owner, repo, number: n, isCrossRepo: false })),
+      ...(crossRepoRefs ?? []).map((r) => ({ owner: r.owner, repo: r.repo, number: r.number, isCrossRepo: true })),
+    ];
+
+    if (tasks.length === 0) return [];
+
+    this.logger.verbose(`GitHub API: getReferencedIssues(${tasks.length} issues)`);
+
+    const results = await Promise.allSettled(
+      tasks.map(async (t) => {
+        const { data } = await this.octokit.rest.issues.get({
+          owner: t.owner,
+          repo: t.repo,
+          issue_number: t.number,
+        });
+        return {
+          number: data.number as number,
+          title: data.title as string,
+          state: data.state as string,
+          body: data.body as string | undefined,
+          ...(t.isCrossRepo ? { owner: t.owner, repo: t.repo } : {}),
+        };
+      }),
+    );
+
+    const issues: Array<{ number: number; title: string; state: string; body?: string; owner?: string; repo?: string }> = [];
+    for (const result of results) {
+      if (result.status === "fulfilled") {
+        issues.push(result.value);
+      } else {
+        const status = (result.reason as { status?: number }).status;
+        this.logger.warn(`Failed to fetch issue: ${result.reason?.message ?? "unknown error"} (status: ${status})`);
+      }
+    }
+
+    return issues;
   }
 
   async getRepoTree(owner: string, repo: string, branch?: string): Promise<string[]> {

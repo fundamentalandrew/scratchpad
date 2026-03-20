@@ -218,3 +218,17 @@ Updated return type element:
 - The `mockPaginate` mock is already set up and shared between `getPRFiles` and the new `getReviewComments`. Both use `this.octokit.paginate()`. In tests, you can distinguish calls by checking which function reference was passed as the first argument, or simply test them in separate `describe` blocks where `mockPaginate` is reset between tests via `beforeEach`.
 - Error objects from Octokit typically have a `status` property (e.g., `{ status: 404, message: "Not Found" }`). When mocking errors, create plain `Error` objects and attach a `status` property.
 - The `getPR` extension is backward compatible. Existing tests for `getPR` need updating to include `head.sha` and `base.sha` in the mock data and to verify the new fields in the assertion.
+
+## Implementation Notes
+
+**Status:** Complete. 33 tests pass in github.test.ts (12 existing + 21 new). All 16 test files pass (165 total).
+
+**Deviations from plan:**
+- Fixed `.env` matching to use `endsWith('.env')` instead of strict equality per code review — catches `production.env` pattern.
+- Added `submodule` type test alongside `symlink` test per code review.
+- Added GitHubAPIError rethrow test for `getReviewComments` (500 error) per code review.
+- Strengthened sensitive path test to verify exact call count and added `production.env` to test list.
+
+**Files modified:**
+- `01-core-infrastructure/src/clients/github.ts` — added `isSensitivePath` helper, `getFileContent`, `getReviewComments`, `getReferencedIssues` methods; extended `getPR` with headSha/baseSha; extended `getPRFiles` with previousPath
+- `01-core-infrastructure/src/clients/github.test.ts` — added 3 new mock functions, 21 new tests across 4 describe blocks
