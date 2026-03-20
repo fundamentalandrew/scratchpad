@@ -11,12 +11,17 @@ This section implements `filterFiles()` in `02-context-agent/src/file-filter.ts`
 - **Section 01 (Schema Extensions):** The `PRFileSchema` type defines the shape of PR file objects that this filter operates on. The filter itself is generic and does not import schemas directly, but the Context Agent will pass PR file objects through it.
 - **picomatch:** Already a dependency of `01-core-infrastructure` (`picomatch@^4.0.3` with `@types/picomatch@^4.0.2`). Since `02-context-agent` will live in the same package (or import from it), picomatch is available.
 
-## File to Create
+## Files Created
 
-`/home/andrew/code/scratchpad/code-review/02-context-agent/src/file-filter.ts`
-`/home/andrew/code/scratchpad/code-review/02-context-agent/src/file-filter.test.ts`
+`/home/andrew/code/scratchpad/code-review/01-core-infrastructure/src/utils/file-filter.ts`
+`/home/andrew/code/scratchpad/code-review/01-core-infrastructure/src/utils/file-filter.test.ts`
 
-Note: Since no `02-context-agent/` package exists yet, the implementer should check whether files should be created inside `01-core-infrastructure/src/` instead (the project currently has a single package at `01-core-infrastructure/`). The plan's directory structure shows `02-context-agent/src/` but the actual project may colocate everything under `01-core-infrastructure/src/`. Adjust paths accordingly based on the project structure at implementation time.
+**Deviation from plan:** Files placed in `01-core-infrastructure/src/utils/` (not `02-context-agent/src/`) because the project is a single package. Consistent with existing utils like `logger.ts` and `errors.ts`.
+
+**Implementation notes:**
+- Pattern splitting: bare globs (no `/`) use `matchBase: true`, path globs use default mode, to work around picomatch limitation where `matchBase` breaks directory-anchored patterns like `dist/**`.
+- JSDoc comment added per code review to document the non-obvious splitting heuristic.
+- 10 tests total, including nested matchBase verification.
 
 ## Tests (Write First)
 
