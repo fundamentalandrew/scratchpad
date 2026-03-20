@@ -132,3 +132,36 @@ Adjust the import paths based on the actual project setup (e.g., if `01-core-inf
 ### Test Organization
 
 Wrap all five tests in a single `describe("Integration: Context Agent")` block. Each test should be independent and set up its own mock data. Use `beforeEach` for shared setup (logger creation, resetting mocks) if helpful, but avoid shared mutable state between tests.
+
+## Implementation Notes
+
+### File Created
+
+- `02-context-agent/src/integration.test.ts` — 5 integration tests in a single `describe` block
+
+### Import Paths (Actual)
+
+All `01-core-infrastructure` imports use the `@core/` path alias configured in `vitest.config.ts`:
+- `@core/agents/schemas.js` for `ContextOutputSchema`, `AnalysisOutputSchema`
+- `@core/clients/github.js` for `GitHubClient` type
+- `@core/config/schema.js` for `defaultConfig`
+- `@core/utils/logger.js` for `createLogger`
+- `@core/pipeline/runner.js` for `runPipeline`
+- `@core/agents/stubs.js` for `createStubAnalysisAgent`
+
+### Deviations from Plan
+
+- **No vi.mock() for utility modules**: Unlike the unit tests, these integration tests exercise the real `filterFiles`, `parseClosingReferences`, `loadDomainRules`, and `detectTechStack` functions. Only the `GitHubClient` is mocked.
+- **Logger at module scope**: Created once at module level rather than in `beforeEach`, since `createLogger` is stateless.
+- **Mock uses `previousPath` not `previous_filename`**: The mock simulates the `GitHubClient` return type (which normalizes the raw API response), not the raw GitHub API.
+
+### Code Review Fixes Applied
+
+1. Fixed mock field name from `previous_filename` to `previousPath` to match `GitHubClient` return type
+2. Added `architectureDoc` assertion in Test 1
+3. Added assertion that `getReferencedIssues` is not called in Test 3 (empty description short-circuit)
+4. Added `ContextOutputSchema` validation on pipeline stage 0 data in Test 5
+
+### Test Count
+
+5 integration tests, all passing. Total test suite: 30 tests (25 unit + 5 integration).
