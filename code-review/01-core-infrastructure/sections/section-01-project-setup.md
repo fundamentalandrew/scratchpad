@@ -138,6 +138,12 @@ After completing all steps, confirm:
 | `/Users/andrew/Code/scratchpad/code-review/01-core-infrastructure/.gitignore` | Git ignore rules |
 | `/Users/andrew/Code/scratchpad/code-review/01-core-infrastructure/src/index.ts` | CLI entry point stub with shebang |
 | `/Users/andrew/Code/scratchpad/code-review/01-core-infrastructure/src/smoke.test.ts` | Trivial test to verify tooling works |
+| `src/{config,pipeline,agents,clients,types,commands,utils}/.gitkeep` | Empty directory markers for git tracking |
+
+## Implementation Notes
+
+- `.gitkeep` files were added to all subdirectories under `src/` so git tracks the empty directory structure. This was identified during code review as a gap in the original plan.
+- All 4 verification checks passed: `tsc --noEmit`, `vitest run` (1 test), `npm run build`, shebang preserved in `dist/index.js`.
 
 ## Dependencies on Other Sections
 
