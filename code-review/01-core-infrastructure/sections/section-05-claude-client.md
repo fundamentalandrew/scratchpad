@@ -173,3 +173,12 @@ class ClaudeAPIError extends Error {
 - **DI for logger**: The logger is injected via constructor, not imported as a global. This makes tests clean and avoids shared state issues with Vitest parallelism.
 - **Generic `query<T>`**: The method is generic over the Zod schema's inferred type, so callers get full type safety on the returned `data` field.
 - **Content block iteration**: The implementation must handle multiple text blocks in a response by concatenating them, rather than assuming a single block at index 0.
+
+## Implementation Notes
+
+- **Actual file paths**: `src/clients/claude.ts` (implementation), `src/clients/claude.test.ts` (tests)
+- **ClaudeAPIError constructor**: The plan specified `(message, { retryable, cause? })` but the existing error class from section-02 uses positional args `(message, retryable)`. Updated to `(message, retryable, options?: ErrorOptions)` during code review to support `cause` forwarding while maintaining backward compatibility.
+- **Zod JSON Schema**: Used Zod 4's built-in `.toJSONSchema()` — no `zod-to-json-schema` package needed.
+- **Test count**: 12 tests (11 from plan + 1 added during code review for JSON parse failure with `cause` preservation).
+- **`system` prompt handling**: Conditionally added to request params only when defined, using `Record<string, unknown>` with a type cast to avoid sending `system: undefined` to the SDK.
+- All 12 tests pass. `redactSecrets` is applied to log output; payloads are intentionally not logged for security.

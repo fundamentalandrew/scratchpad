@@ -40,8 +40,8 @@ export class GitHubAPIError extends Error {
 export class ClaudeAPIError extends Error {
   public readonly retryable: boolean;
 
-  constructor(message: string, retryable: boolean) {
-    super(message);
+  constructor(message: string, retryable: boolean, options?: ErrorOptions) {
+    super(message, options);
     this.name = "ClaudeAPIError";
     this.retryable = retryable;
     Object.setPrototypeOf(this, ClaudeAPIError.prototype);
