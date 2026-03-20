@@ -45,6 +45,10 @@
     "section-07-pipeline": {
       "status": "complete",
       "commit_hash": "bb5ea4d"
+    },
+    "section-08-commands": {
+      "status": "complete",
+      "commit_hash": "19d21cd"
     }
   },
   "pre_commit": {
