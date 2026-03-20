@@ -14,14 +14,20 @@ The issue parser is a utility consumed by the Context Agent's PR mode (section-0
 
 No npm dependencies are required beyond what the project already has. The implementation is pure regex-based string parsing.
 
-## File Paths
+## Files Created
 
-- **Create:** `/home/andrew/code/scratchpad/code-review/02-context-agent/src/issue-parser.ts`
-- **Create:** `/home/andrew/code/scratchpad/code-review/02-context-agent/src/issue-parser.test.ts`
+- `/home/andrew/code/scratchpad/code-review/01-core-infrastructure/src/utils/issue-parser.ts`
+- `/home/andrew/code/scratchpad/code-review/01-core-infrastructure/src/utils/issue-parser.test.ts`
+
+**Deviation from plan:** Files placed in `01-core-infrastructure/src/utils/` (single-package project).
+
+**Implementation notes:**
+- Anchored regex patterns pre-compiled outside inner loop (code review fix).
+- 19 tests total, including bare keywords (`fix`, `close`, `resolve`) and negative bare-URL test.
 
 ## Tests (Write First)
 
-All tests go in `/home/andrew/code/scratchpad/code-review/02-context-agent/src/issue-parser.test.ts`.
+All tests in `01-core-infrastructure/src/utils/issue-parser.test.ts`.
 
 Use Vitest. Import the function under test:
 
