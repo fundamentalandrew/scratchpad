@@ -214,14 +214,23 @@ Export `createContextAgent` and the `ContextAgentInput` type from `/home/andrew/
 
 ## File Structure
 
-After this section is implemented, the directory should contain:
+After this section is implemented, the directory contains:
 
 ```
 02-context-agent/
+├── package.json                   # Project config with vitest
+├── tsconfig.json                  # TypeScript config with @core path alias
+├── vitest.config.ts               # Vitest config with @core alias resolution
 ├── src/
-│   ├── context-agent.ts         # createContextAgent factory + PR mode run()
-│   ├── context-agent.test.ts    # Tests for PR mode
-│   └── index.ts                 # Public exports (create if not exists)
+│   ├── context-agent.ts           # createContextAgent factory + PR mode run()
+│   ├── context-agent.test.ts      # 15 tests for PR mode
+│   └── index.ts                   # Public exports
 ```
 
-The utility modules (`file-filter.ts`, `issue-parser.ts`, `domain-rules.ts`) are created by their respective sections (03, 04, 05) and imported here.
+### Implementation Notes
+
+- **Import strategy:** Utility modules (filterFiles, parseClosingReferences, loadDomainRules) were implemented in `01-core-infrastructure/src/` by sections 03-05. This module imports them via `@core/*` path alias rather than local copies.
+- **Path aliases:** `@core` maps to `../01-core-infrastructure/src` in both tsconfig.json (for TypeScript) and vitest.config.ts (for test resolution).
+- **index.ts exports:** Only re-exports createContextAgent and ContextAgentInput from this package. Utility modules are consumed from `01-core-infrastructure` directly.
+- **Code review auto-fix:** Added logger.error calls before validation error throws for observability.
+- **15 tests passing:** Schema validation, call ordering, filtering, issue parsing, comments, domain rules, error propagation, and metadata.
