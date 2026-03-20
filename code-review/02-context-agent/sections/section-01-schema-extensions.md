@@ -169,3 +169,16 @@ cd /home/andrew/code/scratchpad/code-review/01-core-infrastructure && npm test
 All existing tests must continue to pass (backward compatibility). All new tests should pass. Pay particular attention to:
 1. The `stubs.test.ts` test that calls `ContextOutputSchema.parse(ctxResult)` -- this validates the stub still conforms after schema changes.
 2. The `schemas.test.ts` "JSON Schema generation" test -- all schemas (including new ones, if added to the array) should produce valid JSON Schema output.
+
+## Implementation Notes
+
+**Status:** Complete. 26 tests pass in schemas.test.ts (15 existing + 11 new). All 16 test files pass.
+
+**Deviations from plan:**
+- Added a TechStackSchema rejection test (missing required fields) per code review — the plan only specified positive tests.
+- Added ReferencedIssueSchema, ReviewCommentSchema, TechStackSchema, and PRFileSchema to the JSON Schema generation test array per code review.
+
+**Files modified:**
+- `01-core-infrastructure/src/agents/schemas.ts` — added 3 new schemas, exported PRFileSchema, added previousPath, added 3 optional fields to ContextOutputSchema, added 3 type exports
+- `01-core-infrastructure/src/agents/stubs.ts` — added referencedIssues, comments, techStack to stub return
+- `01-core-infrastructure/src/agents/schemas.test.ts` — added 11 new tests across 5 new describe blocks

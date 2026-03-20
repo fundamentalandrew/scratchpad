@@ -28,6 +28,9 @@ export function createStubContextAgent(logger?: Logger): Agent<unknown, ContextO
         },
         domainRules: null,
         architectureDoc: null,
+        referencedIssues: [],
+        comments: [],
+        techStack: { languages: ["TypeScript"], frameworks: [], dependencies: {} },
       };
     },
   };

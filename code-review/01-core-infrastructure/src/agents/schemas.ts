@@ -19,12 +19,37 @@ export const RecommendationSchema = z.object({
   suggestion: z.string().optional(),
 });
 
-const PRFileSchema = z.object({
+export const ReferencedIssueSchema = z.object({
+  number: z.number(),
+  title: z.string(),
+  state: z.string(),
+  body: z.string().optional(),
+  owner: z.string().optional(),
+  repo: z.string().optional(),
+});
+
+export const ReviewCommentSchema = z.object({
+  id: z.number(),
+  author: z.string(),
+  body: z.string(),
+  path: z.string().optional(),
+  line: z.number().optional(),
+  createdAt: z.string(),
+});
+
+export const TechStackSchema = z.object({
+  languages: z.array(z.string()),
+  frameworks: z.array(z.string()),
+  dependencies: z.record(z.string(), z.string()),
+});
+
+export const PRFileSchema = z.object({
   path: z.string(),
   status: z.string(),
   additions: z.number(),
   deletions: z.number(),
   patch: z.string().nullable().optional(),
+  previousPath: z.string().optional(),
 });
 
 const PRSchema = z.object({
@@ -52,6 +77,9 @@ export const ContextOutputSchema = z
     repoFiles: z.array(z.object({ path: z.string() })).optional(),
     domainRules: z.string().nullable(),
     architectureDoc: z.string().nullable(),
+    referencedIssues: z.array(ReferencedIssueSchema).optional(),
+    comments: z.array(ReviewCommentSchema).optional(),
+    techStack: TechStackSchema.optional(),
   })
   .refine((data) => data.pr !== undefined || data.repoFiles !== undefined, {
     message: "Either pr or repoFiles must be provided",
@@ -79,3 +107,6 @@ export type Recommendation = z.infer<typeof RecommendationSchema>;
 export type ContextOutput = z.infer<typeof ContextOutputSchema>;
 export type AnalysisOutput = z.infer<typeof AnalysisOutputSchema>;
 export type ReviewOutput = z.infer<typeof ReviewOutputSchema>;
+export type ReferencedIssue = z.infer<typeof ReferencedIssueSchema>;
+export type ReviewComment = z.infer<typeof ReviewCommentSchema>;
+export type TechStack = z.infer<typeof TechStackSchema>;
