@@ -17,7 +17,32 @@
     "section-08-commands",
     "section-09-integration"
   ],
-  "sections_state": {},
+  "sections_state": {
+    "section-01-project-setup": {
+      "status": "complete",
+      "commit_hash": "061bfde"
+    },
+    "section-02-shared-types": {
+      "status": "complete",
+      "commit_hash": "1dac121"
+    },
+    "section-03-config-system": {
+      "status": "complete",
+      "commit_hash": "759df40"
+    },
+    "section-04-utils": {
+      "status": "complete",
+      "commit_hash": "47fc442"
+    },
+    "section-05-claude-client": {
+      "status": "complete",
+      "commit_hash": "2ecebe6"
+    },
+    "section-06-github-client": {
+      "status": "complete",
+      "commit_hash": "e001076"
+    }
+  },
   "pre_commit": {
     "present": false,
     "type": "none",
