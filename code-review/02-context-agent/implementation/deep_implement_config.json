@@ -37,6 +37,22 @@
     "section-05-domain-rules-loader": {
       "status": "complete",
       "commit_hash": "85b0acd"
+    },
+    "section-06-tech-stack-detector": {
+      "status": "complete",
+      "commit_hash": "fedb887"
+    },
+    "section-07-context-agent-pr-mode": {
+      "status": "complete",
+      "commit_hash": "60e61d3"
+    },
+    "section-08-context-agent-repo-mode": {
+      "status": "complete",
+      "commit_hash": "ca95f94"
+    },
+    "section-09-integration-tests": {
+      "status": "complete",
+      "commit_hash": "ae9b967"
     }
   },
   "pre_commit": {
