@@ -193,3 +193,21 @@ If this error class does not yet exist when implementing this section, create it
 - Exponential backoff uses powers of 2: 1s, 2s, 4s. No jitter is needed for this use case.
 - The stub agents exist solely for testing infrastructure. Real agents will be implemented in future splits (02-05) and will replace these stubs.
 - The runner accepts `Agent<any, any>[]` rather than a tuple type because TypeScript cannot easily express "output of agent N matches input of agent N+1" in a generic array. Type correctness is enforced at the composition site.
+
+## Implementation Notes
+
+- `PipelineError` already existed in `src/utils/errors.ts` from section-04; no changes needed.
+- `maxRetries` semantics: treated as total attempt count (not retries after initial). `maxRetries: 3` = 3 total attempts. This deviates from the plan's wording but is a simpler mental model.
+- Backoff guard uses `attempt < maxRetries - 1` to avoid an unnecessary sleep after the final failed attempt before throwing.
+- Stub README.md score was lowered from 9/critical to 4/low for realism.
+- All 14 tests pass (10 runner, 4 stubs). Full suite: 103 tests across 12 files.
+
+## Actual Files Produced
+
+| File | Purpose |
+|------|---------|
+| `src/pipeline/types.ts` | Agent interface, PipelineResult, StageResult, PipelineOptions types |
+| `src/pipeline/runner.ts` | Sequential pipeline executor with retry/backoff |
+| `src/pipeline/runner.test.ts` | 10 tests for pipeline runner |
+| `src/agents/stubs.ts` | 4 stub agent factories for testing |
+| `src/agents/stubs.test.ts` | 4 tests for stub agents |
