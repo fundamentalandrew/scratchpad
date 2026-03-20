@@ -43,11 +43,11 @@ describe("AuthError", () => {
 });
 
 describe("URLParseError", () => {
-  it("includes expected format", () => {
-    const err = new URLParseError("Invalid URL: foo/bar");
+  it("preserves message and sets name", () => {
+    const err = new URLParseError("Invalid PR URL. Expected format: https://github.com/owner/repo/pull/123");
     expect(err).toBeInstanceOf(Error);
     expect(err.name).toBe("URLParseError");
-    expect(err.message).toContain("Invalid URL");
+    expect(err.message).toContain("Invalid PR URL");
     expect(err.message).toContain("https://github.com/owner/repo/pull/123");
   });
 });

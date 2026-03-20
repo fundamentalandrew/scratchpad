@@ -50,7 +50,7 @@ export class ClaudeAPIError extends Error {
 
 export class URLParseError extends Error {
   constructor(message: string) {
-    super(`${message}. Expected: https://github.com/owner/repo/pull/123`);
+    super(message);
     this.name = "URLParseError";
     Object.setPrototypeOf(this, URLParseError.prototype);
   }
