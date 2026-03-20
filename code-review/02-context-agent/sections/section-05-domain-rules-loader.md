@@ -4,20 +4,21 @@ Now I have all the context I need. Let me generate the section content.
 
 ## Overview
 
-This section implements the `loadDomainRules()` function in `02-context-agent/src/domain-rules.ts`. The function discovers and loads two optional documentation files from the target repository: a domain rules document and an architecture document. It uses a "config-first, fallback-search" strategy -- try the configured path first, then search well-known fallback locations.
+This section implements the `loadDomainRules()` function. The function discovers and loads two optional documentation files from the target repository: a domain rules document and an architecture document. It uses a "config-first, fallback-search" strategy -- try the configured path first, then search well-known fallback locations.
+
+**Deviation from plan:** Files placed in `01-core-infrastructure/src/context/` instead of `02-context-agent/src/` because no separate package infrastructure exists for 02-context-agent (no package.json, tsconfig, or vitest config). All prior sections followed this same pattern.
 
 ## Dependencies
 
 - **Section 01 (Schema Extensions):** The `ContextOutputSchema` must already have `domainRules: z.string().nullable()` and `architectureDoc: z.string().nullable()` fields (these already exist in the current schema at `/home/andrew/code/scratchpad/code-review/01-core-infrastructure/src/agents/schemas.ts`).
 - **Section 02 (GitHub Client Extensions):** The `GitHubClient` class must have a `getFileContent(owner, repo, path, ref?)` method that returns `string | null` (returns null on 404, throws on other errors). This method lives at `/home/andrew/code/scratchpad/code-review/01-core-infrastructure/src/clients/github.ts`.
 
-## File to Create
+## Actual Files Created
 
-`/home/andrew/code/scratchpad/code-review/02-context-agent/src/domain-rules.ts`
+- `/home/andrew/code/scratchpad/code-review/01-core-infrastructure/src/context/domain-rules.ts`
+- `/home/andrew/code/scratchpad/code-review/01-core-infrastructure/src/context/domain-rules.test.ts`
 
-## File to Create (Tests)
-
-`/home/andrew/code/scratchpad/code-review/02-context-agent/src/domain-rules.test.ts`
+## Tests: 14 passing
 
 ## Config Context
 

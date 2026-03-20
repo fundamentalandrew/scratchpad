@@ -17,7 +17,24 @@
     "section-08-context-agent-repo-mode",
     "section-09-integration-tests"
   ],
-  "sections_state": {},
+  "sections_state": {
+    "section-01-schema-extensions": {
+      "status": "complete",
+      "commit_hash": "bb16dd2"
+    },
+    "section-02-github-client-extensions": {
+      "status": "complete",
+      "commit_hash": "24aa224"
+    },
+    "section-03-file-filter": {
+      "status": "complete",
+      "commit_hash": "89888cf"
+    },
+    "section-04-issue-parser": {
+      "status": "complete",
+      "commit_hash": "24f286d"
+    }
+  },
   "pre_commit": {
     "present": false,
     "type": "none",
