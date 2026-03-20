@@ -41,6 +41,10 @@
     "section-06-github-client": {
       "status": "complete",
       "commit_hash": "e001076"
+    },
+    "section-07-pipeline": {
+      "status": "complete",
+      "commit_hash": "bb5ea4d"
     }
   },
   "pre_commit": {

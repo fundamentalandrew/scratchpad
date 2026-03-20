@@ -230,3 +230,25 @@ These are defined in section 04 (utils) at `src/utils/errors.ts`. This section u
 - **Async actions**: Commander.js supports async action handlers when using `parseAsync`. Always use `parseAsync` to ensure promise rejections are caught.
 - **Testing the CLI parsing**: For integration-level tests of Commander parsing (verifying that `review-pr <url>` routes to the right handler), you can create a program instance in a test and call `program.parseAsync(['node', 'test', 'review-pr', 'https://github.com/o/r/pull/1'])`. However, unit tests of the handler functions themselves (without Commander) are simpler and more focused.
 - **Stub agents**: Import stub agents from `src/agents/stubs.ts` (defined in section 07). The command handlers should construct the agent array and pass it to `runPipeline`. When actual agents are implemented in later splits, only the agent construction changes; the pipeline invocation remains the same.
+
+## Implementation Notes
+
+- **Extracted shared helper**: `src/commands/shared.ts` contains `runReviewPipeline()` with config loading, auth validation, logger/agent creation, and pipeline execution. This eliminated ~90% duplication between review-pr and review-repo.
+- **ClaudeClient/GitHubClient not instantiated**: Per spec, stub agents are used now. Client construction will be added when real agents are implemented.
+- **Pipeline input is untyped**: Input is a plain object. A formal type will be introduced when real agents define their contracts.
+- **Version hardcoded to 0.1.0**: Acceptable per plan. Can be updated during build process.
+- **Top-level error handler**: Uses `process.exitCode = 1` instead of `process.exit(1)` per plan.
+- All 12 new tests pass (4 review-pr, 2 review-repo, 6 init). Full suite: 115 tests across 15 files.
+
+## Actual Files Produced
+
+| File | Purpose |
+|------|---------|
+| `src/index.ts` | CLI entry point with Commander.js, commands, top-level error handler |
+| `src/commands/shared.ts` | Shared helper for review pipeline (config, auth, agents, execution) |
+| `src/commands/review-pr.ts` | review-pr handler — parses PR URL, delegates to shared |
+| `src/commands/review-pr.test.ts` | 4 tests for review-pr |
+| `src/commands/review-repo.ts` | review-repo handler — parses repo URL, delegates to shared |
+| `src/commands/review-repo.test.ts` | 2 tests for review-repo |
+| `src/commands/init.ts` | init handler — creates DOMAIN_RULES.md and ARCHITECTURE.md templates |
+| `src/commands/init.test.ts` | 6 tests for init |
