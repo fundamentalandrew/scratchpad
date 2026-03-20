@@ -163,3 +163,11 @@ if (input.mode === "repo") {
   };
 }
 ```
+
+## Implementation Notes
+
+- **Files modified:** `context-agent.ts` (added repo mode branch + detectTechStack import), `context-agent.test.ts` (added 10 repo mode tests + detectTechStack mock)
+- **defaultBranch:** Hardcoded to "main" as the plan permits
+- **Mode guard:** Added explicit `mode === "repo"` check with throw for unknown modes (from code review)
+- **10 repo mode tests:** Schema validation, filtering, tech stack detection, domain rules, repoFiles shape, no-pr-field, error propagation, truncated tree handling
+- **Total test count:** 25 (15 PR mode + 10 repo mode)

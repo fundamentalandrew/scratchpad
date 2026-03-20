@@ -15,14 +15,19 @@ vi.mock("@core/utils/issue-parser.js", () => ({
 vi.mock("@core/context/domain-rules.js", () => ({
   loadDomainRules: vi.fn().mockResolvedValue({ domainRules: null, architectureDoc: null }),
 }));
+vi.mock("@core/context/tech-stack.js", () => ({
+  detectTechStack: vi.fn().mockResolvedValue({ languages: [], frameworks: [], dependencies: {} }),
+}));
 
 import { filterFiles } from "@core/utils/file-filter.js";
 import { parseClosingReferences } from "@core/utils/issue-parser.js";
 import { loadDomainRules } from "@core/context/domain-rules.js";
+import { detectTechStack } from "@core/context/tech-stack.js";
 
 const mockedFilterFiles = vi.mocked(filterFiles);
 const mockedParseClosingReferences = vi.mocked(parseClosingReferences);
 const mockedLoadDomainRules = vi.mocked(loadDomainRules);
+const mockedDetectTechStack = vi.mocked(detectTechStack);
 
 function createMockGitHub() {
   return {
@@ -344,5 +349,212 @@ describe("createContextAgent — PR mode", () => {
     const agent = createContextAgent({ github: mockGitHub });
     expect(agent.name).toBe("ContextAgent");
     expect(agent.idempotent).toBe(true);
+  });
+});
+
+describe("createContextAgent — Repo mode", () => {
+  let mockGitHub: ReturnType<typeof createMockGitHub>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockGitHub = createMockGitHub();
+    (mockGitHub.getRepoTree as ReturnType<typeof vi.fn>).mockResolvedValue([
+      "src/index.ts",
+      "src/utils.ts",
+      "package.json",
+      "README.md",
+    ]);
+    mockedFilterFiles.mockImplementation(<T>(files: T[]) => files);
+    mockedLoadDomainRules.mockResolvedValue({ domainRules: null, architectureDoc: null });
+    mockedDetectTechStack.mockResolvedValue({ languages: [], frameworks: [], dependencies: {} });
+  });
+
+  it("produces valid ContextOutput for a repo (passes schema validation)", async () => {
+    mockedLoadDomainRules.mockResolvedValue({ domainRules: "some rules", architectureDoc: null });
+    mockedDetectTechStack.mockResolvedValue({
+      languages: ["TypeScript"],
+      frameworks: ["React"],
+      dependencies: { react: "^18.0.0" },
+    });
+
+    const agent = createContextAgent({ github: mockGitHub });
+    const result = await agent.run({
+      mode: "repo",
+      owner: "testorg",
+      repo: "testrepo",
+      config: defaultConfig,
+    });
+
+    const parsed = ContextOutputSchema.safeParse(result);
+    expect(parsed.success).toBe(true);
+    expect(result.mode).toBe("repo");
+    expect(result.repoFiles).toBeDefined();
+    expect(result.techStack).toBeDefined();
+  });
+
+  it("fetches file tree and applies ignorePatterns", async () => {
+    (mockGitHub.getRepoTree as ReturnType<typeof vi.fn>).mockResolvedValue([
+      "node_modules/foo.js",
+      "src/index.ts",
+      "dist/bundle.js",
+    ]);
+    mockedFilterFiles.mockReturnValue(["src/index.ts"]);
+
+    const agent = createContextAgent({ github: mockGitHub });
+    const result = await agent.run({
+      mode: "repo",
+      owner: "testorg",
+      repo: "testrepo",
+      config: defaultConfig,
+    });
+
+    expect(mockedFilterFiles).toHaveBeenCalledWith(
+      ["node_modules/foo.js", "src/index.ts", "dist/bundle.js"],
+      defaultConfig.ignorePatterns,
+      expect.any(Function),
+    );
+    expect(result.repoFiles).toHaveLength(1);
+    expect(result.repoFiles![0].path).toBe("src/index.ts");
+  });
+
+  it("detects tech stack from manifest files", async () => {
+    const techStack = {
+      languages: ["TypeScript"],
+      frameworks: ["React"],
+      dependencies: { react: "^18.0.0" },
+    };
+    mockedDetectTechStack.mockResolvedValue(techStack);
+
+    const agent = createContextAgent({ github: mockGitHub });
+    const result = await agent.run({
+      mode: "repo",
+      owner: "testorg",
+      repo: "testrepo",
+      config: defaultConfig,
+    });
+
+    expect(mockedDetectTechStack).toHaveBeenCalledWith(
+      expect.objectContaining({
+        owner: "testorg",
+        repo: "testrepo",
+        filePaths: expect.any(Array),
+      }),
+    );
+    expect(result.techStack).toEqual(techStack);
+  });
+
+  it("loads domain rules and architecture doc", async () => {
+    mockedLoadDomainRules.mockResolvedValue({
+      domainRules: "rules content",
+      architectureDoc: "arch content",
+    });
+
+    const agent = createContextAgent({ github: mockGitHub });
+    const result = await agent.run({
+      mode: "repo",
+      owner: "testorg",
+      repo: "testrepo",
+      config: defaultConfig,
+    });
+
+    expect(result.domainRules).toBe("rules content");
+    expect(result.architectureDoc).toBe("arch content");
+    expect(mockedLoadDomainRules).toHaveBeenCalledWith(
+      expect.objectContaining({
+        owner: "testorg",
+        repo: "testrepo",
+      }),
+    );
+  });
+
+  it("sets repoFiles array from filtered tree", async () => {
+    (mockGitHub.getRepoTree as ReturnType<typeof vi.fn>).mockResolvedValue([
+      "src/a.ts",
+      "src/b.ts",
+      "README.md",
+    ]);
+
+    const agent = createContextAgent({ github: mockGitHub });
+    const result = await agent.run({
+      mode: "repo",
+      owner: "testorg",
+      repo: "testrepo",
+      config: defaultConfig,
+    });
+
+    expect(result.repoFiles).toHaveLength(3);
+    expect(result.repoFiles!.map((f) => f.path)).toEqual(["src/a.ts", "src/b.ts", "README.md"]);
+  });
+
+  it("does not include pr field in output", async () => {
+    const agent = createContextAgent({ github: mockGitHub });
+    const result = await agent.run({
+      mode: "repo",
+      owner: "testorg",
+      repo: "testrepo",
+      config: defaultConfig,
+    });
+
+    expect(result.pr).toBeUndefined();
+    expect(result.referencedIssues).toBeUndefined();
+    expect(result.comments).toBeUndefined();
+  });
+
+  it("throws when owner is empty", async () => {
+    const agent = createContextAgent({ github: mockGitHub });
+    await expect(
+      agent.run({
+        mode: "repo",
+        owner: "",
+        repo: "testrepo",
+        config: defaultConfig,
+      }),
+    ).rejects.toThrow(/owner/i);
+  });
+
+  it("throws when repo is empty", async () => {
+    const agent = createContextAgent({ github: mockGitHub });
+    await expect(
+      agent.run({
+        mode: "repo",
+        owner: "testorg",
+        repo: "",
+        config: defaultConfig,
+      }),
+    ).rejects.toThrow(/repo/i);
+  });
+
+  it("propagates GitHubAPIError from getRepoTree", async () => {
+    (mockGitHub.getRepoTree as ReturnType<typeof vi.fn>).mockRejectedValue(
+      new GitHubAPIError("getRepoTree failed"),
+    );
+
+    const agent = createContextAgent({ github: mockGitHub });
+    await expect(
+      agent.run({
+        mode: "repo",
+        owner: "testorg",
+        repo: "testrepo",
+        config: defaultConfig,
+      }),
+    ).rejects.toThrow(GitHubAPIError);
+  });
+
+  it("handles truncated tree (still produces valid output)", async () => {
+    // getRepoTree handles truncation internally (logs warning)
+    // Agent should still produce valid output with partial results
+    (mockGitHub.getRepoTree as ReturnType<typeof vi.fn>).mockResolvedValue(["src/partial.ts"]);
+
+    const agent = createContextAgent({ github: mockGitHub });
+    const result = await agent.run({
+      mode: "repo",
+      owner: "testorg",
+      repo: "testrepo",
+      config: defaultConfig,
+    });
+
+    const parsed = ContextOutputSchema.safeParse(result);
+    expect(parsed.success).toBe(true);
+    expect(result.repoFiles).toHaveLength(1);
   });
 });

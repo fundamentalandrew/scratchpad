@@ -6,6 +6,7 @@ import type { Logger } from "@core/utils/logger.js";
 import { filterFiles } from "@core/utils/file-filter.js";
 import { parseClosingReferences } from "@core/utils/issue-parser.js";
 import { loadDomainRules } from "@core/context/domain-rules.js";
+import { detectTechStack } from "@core/context/tech-stack.js";
 
 export interface ContextAgentInput {
   mode: "pr" | "repo";
@@ -41,7 +42,11 @@ export function createContextAgent(options: {
         return runPRMode({ github, logger, owner, repo, number: input.number, config });
       }
 
-      throw new Error("Repo mode not yet implemented");
+      if (mode === "repo") {
+        return runRepoMode({ github, logger, owner, repo, config });
+      }
+
+      throw new Error(`Unknown mode: ${mode as string}`);
     },
   };
 }
@@ -104,6 +109,39 @@ async function runPRMode(params: {
     comments,
     domainRules: domainResult.domainRules,
     architectureDoc: domainResult.architectureDoc,
+  };
+}
+
+async function runRepoMode(params: {
+  github: GitHubClient;
+  logger?: Logger;
+  owner: string;
+  repo: string;
+  config: CodeReviewConfig;
+}): Promise<ContextOutput> {
+  const { github, logger, owner, repo, config } = params;
+
+  // Step 1: Fetch file tree
+  logger?.verbose(`Fetching repository file tree for ${owner}/${repo}...`);
+  const filePaths = await github.getRepoTree(owner, repo);
+
+  // Step 2: Filter files
+  const filtered = filterFiles(filePaths, config.ignorePatterns, (p) => p);
+
+  // Step 3: Parallel fetch of tech stack and domain rules
+  logger?.verbose("Detecting tech stack and loading domain rules in parallel...");
+  const [techStack, domainResult] = await Promise.all([
+    detectTechStack({ github, owner, repo, filePaths: filtered, logger }),
+    loadDomainRules({ github, owner, repo, config, logger }),
+  ]);
+
+  return {
+    mode: "repo",
+    repository: { owner, repo, defaultBranch: "main" },
+    repoFiles: filtered.map((p) => ({ path: p })),
+    domainRules: domainResult.domainRules,
+    architectureDoc: domainResult.architectureDoc,
+    techStack,
   };
 }
 
