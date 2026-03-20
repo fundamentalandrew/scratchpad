@@ -49,6 +49,10 @@
     "section-08-commands": {
       "status": "complete",
       "commit_hash": "19d21cd"
+    },
+    "section-09-integration": {
+      "status": "complete",
+      "commit_hash": "7145ed9"
     }
   },
   "pre_commit": {
