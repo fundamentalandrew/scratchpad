@@ -147,3 +147,17 @@ The module should export:
 - `PatternFilterResult` -- the return type
 
 These should be re-exported through the barrel file at `03-analysis-agent/src/index.ts` (created in section 01).
+
+## Implementation Notes
+
+### Files Created/Modified
+- `src/deterministic/pattern-filter.ts` — main implementation
+- `tests/unit/pattern-filter.test.ts` — 9 tests, all passing
+- `src/index.ts` — updated with barrel re-exports (added during code review)
+
+### Deviations from Plan
+- None. Implementation matches plan exactly.
+
+### Code Review Fixes
+- Added barrel re-exports for `filterChangedFiles`, `ANALYSIS_IGNORE_PATTERNS`, `PatternFilterResult` to `index.ts` (was missing in initial implementation)
+- Added extra test for `__snapshots__` directory pattern with non-snap file to independently verify directory glob

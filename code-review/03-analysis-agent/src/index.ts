@@ -16,4 +16,10 @@ export type {
   FileStatus,
 } from "./scoring/types.js";
 
+export {
+  filterChangedFiles,
+  ANALYSIS_IGNORE_PATTERNS,
+  type PatternFilterResult,
+} from "./deterministic/pattern-filter.js";
+
 export { createAnalysisAgent } from "./analysis-agent.js";
