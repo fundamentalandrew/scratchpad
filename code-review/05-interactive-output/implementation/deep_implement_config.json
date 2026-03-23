@@ -23,6 +23,14 @@
     "section-02-core-github": {
       "status": "complete",
       "commit_hash": "2e3bed7"
+    },
+    "section-03-shared-formatters": {
+      "status": "complete",
+      "commit_hash": "08395e7"
+    },
+    "section-04-output-formatters": {
+      "status": "complete",
+      "commit_hash": "079a8ce"
     }
   },
   "pre_commit": {

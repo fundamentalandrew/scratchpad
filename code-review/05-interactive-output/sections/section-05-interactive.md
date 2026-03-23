@@ -137,7 +137,7 @@ Create test helper factories:
 
 - `makeReviewOutput(overrides?)` -- returns a valid `ReviewOutput` with sensible defaults (2-3 recommendations of different severities, a core decision string, focus areas, safe-to-ignore groups)
 - `makeContextOutput(overrides?)` -- returns a valid `ContextOutput` in PR mode with PR metadata
-- `makeLogger()` -- returns a mock logger object with `vi.fn()` for `info`, `warn`, `error`, `debug`
+- `makeLogger()` -- returns a mock logger object with `vi.fn()` for `info`, `warn`, `error`, `verbose`, `success` (matching the actual `Logger` interface)
 
 ### Test Cases
 
@@ -200,3 +200,17 @@ describe("runInteractiveReview", () => {
 **Testing "Back" not shown for index 0:** Inspect the `choices` argument passed to the `select` mock on the first call. Verify it does not include a choice with value `"back"`. This requires checking `select.mock.calls[0][0].choices`.
 
 **Testing PR comment option visibility:** When `contextOutput.mode` is `"repo"` (not PR mode), verify the final destination `select` call does not include a choice with value `"pr-comment"`. When mode is `"pr"`, verify it does include that choice.
+
+---
+
+## Implementation Notes
+
+**Files created:**
+- `05-interactive-output/src/interactive.ts` - Main interactive review flow
+- `05-interactive-output/tests/interactive.test.ts` - 22 tests
+
+**Deviations from plan:**
+- Added visual separator (`───`) between recommendations in the review loop for terminal readability (code review finding)
+- Used defensive null guard instead of non-null assertion on decisions array (code review finding)
+- Added extra test "hides Post as PR comment when context mode is repo" not in original plan
+- Logger mock uses `verbose`/`success` matching real `Logger` interface (plan incorrectly specified `debug`)
