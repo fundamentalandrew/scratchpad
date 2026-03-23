@@ -23,28 +23,30 @@ The batch builder has no dependency on tree-sitter, Claude client, or any extern
 The batch builder operates on these types, which should be defined in `src/scoring/types.ts` by section-01-foundation. If not yet present, the implementer should add them there.
 
 ```typescript
-type ScoringFile = {
+// Actual types as defined in section 01's types.ts:
+interface ScoringFile {
   path: string;
-  diff: string;           // the patch/diff content to send to LLM
-  metadata?: {
-    status: string;       // "added" | "modified" | "deleted" | "renamed"
-    additions: number;
-    deletions: number;
-  };
-};
+  diff: string;
+  status: FileStatus;     // "added" | "modified" | "deleted" | "renamed" (top-level)
+  metadata?: string;      // optional string metadata
+}
 
-type FileBatch = {
+interface FileBatch {
   files: ScoringFile[];
   estimatedTokens: number;
-  isLargeFile: boolean;   // true if this batch contains a single oversized file
-};
+  isLargeFile: boolean;
+}
 
-type LowRiskSummary = {
+interface LowRiskSummary {
   path: string;
-  changeType: string;     // e.g. "format-only", "rename-only"
-  score: number;
-};
+  changeType: ClassificationResult["changeType"];
+  suggestedScore: number;  // was "score" in original plan
+}
 ```
+
+**Note:** The original plan had `ScoringFile.metadata` as an object with `status`/`additions`/`deletions`, but the actual type from section 01 has `status` as a top-level field and `metadata` as an optional string. Similarly, `LowRiskSummary` uses `suggestedScore` instead of `score`.
+
+**Design deviation:** The plan suggested storing low-risk summaries on the `FileBatch` object. The implementation only accounts for summary tokens in the budget math. The orchestrator (section 08) passes summaries directly to the prompt-builder, keeping batch-builder focused on token estimation.
 
 ## Tests First
 
