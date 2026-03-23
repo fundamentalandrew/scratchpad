@@ -36,14 +36,18 @@ The test file should contain the following test cases. Each test constructs appr
 # Test: buildPRSystemPrompt includes domain rules when provided
 # Test: buildPRSystemPrompt omits domain rules section when null
 # Test: buildPRSystemPrompt includes architecture doc when provided
+# Test: buildPRSystemPrompt omits architecture doc section when null (added via review)
 # Test: buildPRSystemPrompt includes tech stack when provided
+# Test: buildPRSystemPrompt omits tech stack section when undefined (added via review)
 # Test: buildRepoSystemPrompt includes architecture assessment role
 # Test: buildRepoSystemPrompt has different focus than PR mode
 # Test: buildUserPrompt includes file paths and scores for files scoring 4+
 # Test: buildUserPrompt excludes files scoring below 4
 # Test: buildUserPrompt includes PR title and description
 # Test: buildUserPrompt truncates description to 2000 chars
-# Test: buildUserPrompt limits to top 50 files by score
+# Test: buildUserPrompt limits to top 50 files by score (strengthened to exact assertion)
+# Test: buildUserPrompt includes referenced issues when present (added via review)
+# Test: buildUserPrompt includes file additions and deletions from PR files (added via review)
 # Test: buildUserPrompt includes category distribution
 # Test: buildUserPrompt limits reasons to first 2 per file
 ```
