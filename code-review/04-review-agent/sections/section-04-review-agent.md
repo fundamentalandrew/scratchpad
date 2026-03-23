@@ -163,7 +163,9 @@ Tests for this section live in `/home/andrew/code/scratchpad/code-review/04-revi
 # Test: severity derived deterministically from score (8-10 critical, 5-7 high, 4 medium)
 # Test: LLM response fields (message, humanCheckNeeded, estimatedReviewTime, category) mapped correctly
 # Test: safeToIgnore groups computed from low-score files, not from LLM
-# Test: safeToIgnore grouped by category then by top-level directory
+# Test: safeToIgnore grouped by category when matching (added via review)
+# Test: safeToIgnore grouped by top-level directory
+# Test: splits directory groups exceeding 20 files by next path segment (added via review)
 # Test: safeToIgnore sorted by count descending, label ascending
 # Test: PR mode uses buildPRSystemPrompt
 # Test: repo mode uses buildRepoSystemPrompt
