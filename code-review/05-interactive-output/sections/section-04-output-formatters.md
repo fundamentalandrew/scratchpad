@@ -166,3 +166,21 @@ export function formatMarkdownFile(
 ## Exports
 
 Both formatter functions should be exported from their respective files. They should also be re-exported from `src/index.ts` (set up in section 01) so consumers (the output agent in section 07) can import them.
+
+## Implementation Notes
+
+### Files Created
+- `05-interactive-output/src/formatters/pr-comment.ts` — formatPRComment
+- `05-interactive-output/src/formatters/markdown-file.ts` — formatMarkdownFile
+- `05-interactive-output/tests/formatters/pr-comment.test.ts` — 7 tests
+- `05-interactive-output/tests/formatters/markdown-file.test.ts` — 5 tests
+
+### Design Decisions (from code review)
+- **buildReportBody moved to shared.ts:** Rather than keeping it as a private helper in pr-comment.ts, it was moved to shared.ts as an exported utility. Both formatters import from shared.ts.
+- **No duplicate core decision:** The plan's buildReportBody initially added a separate `## :dart: Core Decision` section, but formatSummaryHeader already renders this. The duplicate was removed.
+- **YAML values quoted:** Frontmatter values are wrapped in double quotes for safe YAML parsing of URLs with colons.
+- **Re-exports added to index.ts:** formatPRComment and formatMarkdownFile are re-exported from the package entry point.
+
+### Test Coverage
+- 12 tests total (7 PR comment + 5 markdown file)
+- Covers: marker, section presence, details blocks (3, 5, 6 groups), severity ordering, user notes, frontmatter fields, body content with recommendations

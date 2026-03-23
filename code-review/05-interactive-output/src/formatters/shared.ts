@@ -63,3 +63,57 @@ export function formatSummaryHeader(
 export function sanitizeForGitHub(text: string): string {
   return text.replace(/(^|\s)@(\w)/g, "$1@\u200b$2");
 }
+
+const SEVERITY_ORDER: Record<string, number> = {
+  critical: 0,
+  high: 1,
+  medium: 2,
+  low: 3,
+};
+
+function sortBySeverity(
+  recs: AnnotatedRecommendation[]
+): AnnotatedRecommendation[] {
+  return [...recs].sort((a, b) => {
+    const sevA = SEVERITY_ORDER[a.recommendation.severity] ?? 4;
+    const sevB = SEVERITY_ORDER[b.recommendation.severity] ?? 4;
+    if (sevA !== sevB) return sevA - sevB;
+    return (b.recommendation.score ?? 0) - (a.recommendation.score ?? 0);
+  });
+}
+
+export function buildReportBody(
+  reviewOutput: ReviewOutput,
+  approved: AnnotatedRecommendation[],
+  totalFilesReviewed: number,
+  options?: { sanitize?: boolean }
+): string {
+  let output = "";
+
+  output += formatSummaryHeader(
+    reviewOutput,
+    approved.length,
+    totalFilesReviewed
+  );
+
+  if (approved.length > 0) {
+    output += `## :stop_sign: Top ${approved.length} Files Requiring Human Verification\n\n`;
+    const sorted = sortBySeverity(approved);
+    let recsBlock = sorted.map(formatRecommendationBlock).join("");
+    if (options?.sanitize) {
+      recsBlock = sanitizeForGitHub(recsBlock);
+    }
+    output += recsBlock;
+  }
+
+  const ignoreSection = formatSafeToIgnoreSection(reviewOutput.safeToIgnore);
+  if (ignoreSection) {
+    if (reviewOutput.safeToIgnore.length > 5) {
+      output += `<details>\n<summary>Safe to Ignore (${reviewOutput.safeToIgnore.length} groups)</summary>\n\n${ignoreSection}</details>\n`;
+    } else {
+      output += ignoreSection;
+    }
+  }
+
+  return output;
+}
