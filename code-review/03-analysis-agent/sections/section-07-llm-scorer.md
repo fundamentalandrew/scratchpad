@@ -219,3 +219,10 @@ The `LLMScoringResponseSchema` should be exported (or testable) so that schema c
 - The orchestration layer passes `ClaudeClient` instance, pre-built batches, and scoring context.
 - Results from `scoreFiles()` are merged with deterministic layer results during output assembly (section 08). The merge logic (LLM score wins if higher than deterministic score) lives in the orchestration layer, not here.
 - If no batches are provided (all files were handled by the deterministic layer), `scoreFiles` should return an empty array without making any API calls.
+
+## Implementation Notes
+
+- **Files created:** `src/scoring/llm-scorer.ts`, `tests/unit/llm-scorer.test.ts`
+- **Tests:** 9 tests covering schema validation, sequential/parallel processing, error propagation, system prompt wiring, and empty-batch handling
+- **Deviations from plan:** None. Implementation follows the plan exactly.
+- **Code review decision:** Zod schema enum and `ScoringChangeType` union are kept as separate definitions (structurally compatible, TypeScript catches mismatches at compile time).
