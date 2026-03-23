@@ -159,6 +159,16 @@ function classifyChange(before: Tree, after: Tree): ClassificationResult
 
 The 0.9 threshold matters for the orchestration layer (section-08): files classified with confidence >= 0.9 are auto-scored as low-risk (score 1-2). Files below 0.9 are sent to LLM scoring. With the values above, all three non-structural classifications meet the threshold, but the confidence system exists so that future, more nuanced heuristics can express uncertainty.
 
+## Implementation Notes
+
+- **Files created:** `src/deterministic/ast-classifier.ts`, `src/deterministic/subtree-hash.ts`, `src/deterministic/shared-constants.ts`, `tests/unit/ast-classifier.test.ts` (14 tests), `tests/unit/subtree-hash.test.ts` (9 tests). Total: 23 tests.
+- **Deviations from plan:**
+  - Added `shared-constants.ts` to deduplicate `IDENTIFIER_TYPES` between classifier and hasher.
+  - Added `getOperatorTokens` comparison in parallel tree walk to detect operator changes (e.g., `>` vs `>=`) which tree-sitter represents as anonymous tokens not visible to named-children-only traversal.
+  - Added explicit empty file edge case handling at start of `classifyChange`.
+  - Added arrow function (`lexical_declaration`) support in `extractFunctionHashes`.
+- **Confidence values match plan:** format-only=1.0, rename-only=0.95, moved-function=0.9, structural=1.0.
+
 ## Edge Cases
 
 - **Empty files**: If before or after is an empty source string, Tree-sitter produces a tree with just a root node and no children. An empty-to-non-empty change is structural (new code added). A non-empty-to-empty change is structural (all code removed). Empty-to-empty is format-only.
