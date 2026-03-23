@@ -154,6 +154,46 @@ export class GitHubClient {
     }
   }
 
+  async createOrUpdatePRComment(
+    owner: string,
+    repo: string,
+    prNumber: number,
+    body: string,
+    marker: string,
+  ): Promise<{ commentId: number; updated: boolean }> {
+    this.logger.verbose(`GitHub API: createOrUpdatePRComment(${owner}/${repo}#${prNumber})`);
+    try {
+      const comments = await this.octokit.paginate(
+        this.octokit.rest.issues.listComments,
+        { owner, repo, issue_number: prNumber, per_page: 100 },
+      );
+      const existing = (comments as Array<{ id: number; body?: string | null }>).find(
+        (c) => c.body?.includes(marker),
+      );
+      if (existing) {
+        await this.octokit.rest.issues.updateComment({
+          owner,
+          repo,
+          comment_id: existing.id,
+          body,
+        });
+        return { commentId: existing.id, updated: true };
+      }
+      const { data } = await this.octokit.rest.issues.createComment({
+        owner,
+        repo,
+        issue_number: prNumber,
+        body,
+      });
+      return { commentId: data.id, updated: false };
+    } catch (e) {
+      throw new GitHubAPIError(
+        `createOrUpdatePRComment(${owner}/${repo}#${prNumber}) failed: ${(e as Error).message}`,
+        { cause: e as Error },
+      );
+    }
+  }
+
   async getFileContent(owner: string, repo: string, path: string, ref?: string): Promise<string | null> {
     if (isSensitivePath(path)) {
       this.logger.warn(`Skipping sensitive file: ${path}`);

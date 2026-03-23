@@ -103,8 +103,13 @@ The `GitHubAPIError` class is imported from `../utils/errors.js` and is already 
 ## Verification Checklist
 
 - The new method appears on the `GitHubClient` class with the exact signature above
-- All tests pass with `npm test` from `/home/andrew/code/scratchpad/code-review/01-core-infrastructure`
-- The test file is at `/home/andrew/code/scratchpad/code-review/01-core-infrastructure/tests/clients/github-comment.test.ts`
+- All 10 tests pass with `npx vitest run src/clients/github-comment.test.ts`
+- The test file is at `src/clients/github-comment.test.ts` (co-located, matching existing convention -- plan said `tests/` but vitest config only includes `src/**/*.test.ts`)
 - No existing methods are modified
 - The method uses `this.octokit.paginate` for comment listing (not manual page loops)
 - The `body` is never modified by the method -- it is passed through exactly as received
+
+## Deviations from Plan
+
+- **Test file location**: Placed at `src/clients/github-comment.test.ts` instead of `tests/clients/` because vitest config only includes `src/**/*.test.ts` and existing tests follow this co-located pattern
+- **Additional error path tests**: Added tests for createComment and updateComment failure paths (plan only specified paginate failure)
