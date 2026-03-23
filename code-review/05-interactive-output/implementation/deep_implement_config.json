@@ -39,6 +39,10 @@
     "section-06-publishers": {
       "status": "complete",
       "commit_hash": "097ba6b"
+    },
+    "section-07-output-agent": {
+      "status": "complete",
+      "commit_hash": "a8622c9"
     }
   },
   "pre_commit": {
