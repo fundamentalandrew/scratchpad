@@ -1,0 +1,28 @@
+{
+  "plugin_root": "/home/andrew/.claude/plugins/cache/piercelamb-plugins/deep-implement/0.2.1",
+  "sections_dir": "/home/andrew/code/scratchpad/code-review/05-interactive-output/sections",
+  "target_dir": "/home/andrew/code/scratchpad/code-review",
+  "state_dir": "/home/andrew/code/scratchpad/code-review/05-interactive-output/implementation",
+  "git_root": "/home/andrew/code/scratchpad",
+  "commit_style": "simple",
+  "test_command": "uv run pytest",
+  "sections": [
+    "section-01-setup",
+    "section-02-core-github",
+    "section-03-shared-formatters",
+    "section-04-output-formatters",
+    "section-05-interactive",
+    "section-06-publishers",
+    "section-07-output-agent"
+  ],
+  "sections_state": {},
+  "pre_commit": {
+    "present": false,
+    "type": "none",
+    "config_file": null,
+    "native_hook": null,
+    "may_modify_files": false,
+    "detected_formatters": []
+  },
+  "created_at": "2026-03-23T15:41:41.597993+00:00"
+}
