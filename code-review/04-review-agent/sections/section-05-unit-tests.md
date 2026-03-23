@@ -1,16 +1,25 @@
-Now I have all the context needed. Let me produce the section content.
-
 # Section 05: Unit Tests for review-agent.ts
+
+## Status: IMPLEMENTED
 
 ## Overview
 
-This section adds unit tests for the review agent implementation at `/home/andrew/code/scratchpad/code-review/04-review-agent/tests/unit/review-agent.test.ts`. These tests mock the `ClaudeClient` and verify the orchestration logic: mode selection, severity mapping, safe-to-ignore grouping, schema conformance, and edge cases.
+Unit tests for the review agent at `tests/unit/review-agent.test.ts`. Tests mock `ClaudeClient` and verify orchestration logic: mode selection, severity mapping, safe-to-ignore grouping, schema conformance, and edge cases.
 
-**Depends on:** section-04 (the `createReviewAgent` factory function and `run` method must exist)
+**Depends on:** section-04
 
-## File to Create
+## File Created
 
-**`/home/andrew/code/scratchpad/code-review/04-review-agent/tests/unit/review-agent.test.ts`**
+**`04-review-agent/tests/unit/review-agent.test.ts`** — 24 tests (20 in `createReviewAgent` describe, 4 in `deriveSeverity` describe)
+
+## Deviations from Plan
+
+- Test file was initially committed as part of section-04 (commit dbd9bed) with 23 tests
+- Code review identified 3 gaps; applied auto-fixes adding 1 new test and improving existing assertions:
+  1. `makeLLMResponse` made dynamic (accepts optional file list) instead of hardcoded single file
+  2. Added `safeToIgnore: []` assertion to missing-context test
+  3. Added multi-file integration test (scores 4/5/6/8/10) verifying severity mapping through `agent.run()`
+- `groupLowRiskFiles` and `deriveSeverity` tested directly (exported functions) in addition to through `agent.run()` — plan suggested testing only through run() interface but direct testing provides better isolation
 
 ## Background Context
 

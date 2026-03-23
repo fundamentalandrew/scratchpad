@@ -26,20 +26,19 @@ function makeContext(overrides: Partial<ContextOutput> = {}): ContextOutput {
   } as ContextOutput;
 }
 
-function makeLLMResponse() {
+function makeLLMResponse(files?: string[]) {
+  const fileList = files ?? ["src/payments.ts"];
   return {
     data: {
       coreDecision: "The migration adds a new payment provider",
-      recommendations: [
-        {
-          file: "src/payments.ts",
-          category: "security",
-          message: "Payment flow lacks idempotency key",
-          suggestion: "Add idempotency key header",
-          humanCheckNeeded: "Verify the payment flow cannot double-charge",
-          estimatedReviewTime: "15" as const,
-        },
-      ],
+      recommendations: fileList.map((file) => ({
+        file,
+        category: "security",
+        message: `Review needed for ${file}`,
+        suggestion: `Improve ${file}`,
+        humanCheckNeeded: `Verify ${file} is correct`,
+        estimatedReviewTime: "15" as const,
+      })),
       focusAreas: ["Payment security", "Error handling"],
       summary: "This PR introduces a new payment provider",
     },
@@ -125,11 +124,11 @@ describe("createReviewAgent", () => {
     const agent = createReviewAgent(makeDeps());
     const result = await agent.run(makeInput());
     const rec = result.recommendations[0];
-    expect(rec.message).toBe("Payment flow lacks idempotency key");
-    expect(rec.humanCheckNeeded).toBe("Verify the payment flow cannot double-charge");
+    expect(rec.message).toBe("Review needed for src/payments.ts");
+    expect(rec.humanCheckNeeded).toBe("Verify src/payments.ts is correct");
     expect(rec.estimatedReviewTime).toBe("15");
     expect(rec.category).toBe("security");
-    expect(rec.suggestion).toBe("Add idempotency key header");
+    expect(rec.suggestion).toBe("Improve src/payments.ts");
   });
 
   it("safeToIgnore groups computed from low-score files", async () => {
@@ -220,6 +219,7 @@ describe("createReviewAgent", () => {
     const agent = createReviewAgent(deps);
     const result = await agent.run(makeInput({ contextPassthrough: undefined }));
     expect(result.recommendations).toEqual([]);
+    expect(result.safeToIgnore).toEqual([]);
     expect(result.coreDecision).toContain("missing context");
     expect(deps.logger.warn).toHaveBeenCalled();
     expect(deps.claude.query).not.toHaveBeenCalled();
@@ -247,6 +247,37 @@ describe("createReviewAgent", () => {
     const agent = createReviewAgent(makeDeps());
     const result = await agent.run(makeInput());
     expect(() => ReviewOutputSchema.parse(result)).not.toThrow();
+  });
+
+  it("multi-file scores and severities mapped correctly through run()", async () => {
+    const files: FileScore[] = [
+      { path: "src/auth.ts", score: 10, riskLevel: "critical", reasons: ["Auth"] },
+      { path: "src/api.ts", score: 8, riskLevel: "critical", reasons: ["API"] },
+      { path: "src/handler.ts", score: 6, riskLevel: "high", reasons: ["Logic"] },
+      { path: "src/validate.ts", score: 5, riskLevel: "high", reasons: ["Validation"] },
+      { path: "src/config.ts", score: 4, riskLevel: "medium", reasons: ["Config"] },
+      { path: "src/readme.ts", score: 2, riskLevel: "low", reasons: ["Docs"] },
+    ];
+    const highRiskFiles = files.filter((f) => f.score >= 4).map((f) => f.path);
+    const queryMock = vi.fn().mockResolvedValue(makeLLMResponse(highRiskFiles));
+    const agent = createReviewAgent(makeDeps(queryMock));
+    const result = await agent.run(makeInput({
+      scoredFiles: files,
+      criticalFiles: files.filter((f) => f.riskLevel === "critical"),
+    }));
+
+    expect(result.recommendations).toHaveLength(5);
+    const byFile = new Map(result.recommendations.map((r) => [r.file, r]));
+    expect(byFile.get("src/auth.ts")!.severity).toBe("critical");
+    expect(byFile.get("src/auth.ts")!.score).toBe(10);
+    expect(byFile.get("src/api.ts")!.severity).toBe("critical");
+    expect(byFile.get("src/handler.ts")!.severity).toBe("high");
+    expect(byFile.get("src/validate.ts")!.severity).toBe("high");
+    expect(byFile.get("src/config.ts")!.severity).toBe("medium");
+    expect(byFile.get("src/config.ts")!.score).toBe(4);
+    // Low-score file should be in safeToIgnore, not recommendations
+    expect(byFile.has("src/readme.ts")).toBe(false);
+    expect(result.safeToIgnore.length).toBeGreaterThan(0);
   });
 
   it("Claude client called with LLMReviewResponseSchema", async () => {

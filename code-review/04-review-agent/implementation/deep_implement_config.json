@@ -19,6 +19,18 @@
     "section-01-schema-updates": {
       "status": "complete",
       "commit_hash": "1bbdaff"
+    },
+    "section-02-foundation": {
+      "status": "complete",
+      "commit_hash": "5d2227a"
+    },
+    "section-03-prompt-builder": {
+      "status": "complete",
+      "commit_hash": "4974427"
+    },
+    "section-04-review-agent": {
+      "status": "complete",
+      "commit_hash": "dbd9bed"
     }
   },
   "pre_commit": {
