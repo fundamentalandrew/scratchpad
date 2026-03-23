@@ -15,7 +15,12 @@
     "section-06-integration-tests",
     "section-07-analysis-passthrough"
   ],
-  "sections_state": {},
+  "sections_state": {
+    "section-01-schema-updates": {
+      "status": "complete",
+      "commit_hash": "1bbdaff"
+    }
+  },
   "pre_commit": {
     "present": false,
     "type": "none",

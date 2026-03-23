@@ -181,3 +181,13 @@ File: /home/andrew/code/scratchpad/code-review/04-review-agent/tests/unit/types.
 11. Run `npm install` (or ensure workspace resolution works)
 12. Verify `npx tsc --noEmit` passes
 13. Verify `npx vitest run` passes (zero failures)
+
+## Implementation Notes (Post-Implementation)
+
+### Deviations from Plan
+- **Barrel exports expanded**: Added `ReviewOutputSchema` and `AnalysisOutputSchema` to `index.ts` barrel exports (code review finding). Also exported prompt-builder stubs for forward compatibility.
+- **Placeholder test files use `it.todo`** instead of truly empty files, to avoid vitest "no test suite found" errors.
+- **Smoke tests included**: Created `tests/unit/types.test.ts` with 3 tests for `LLMReviewResponseSchema`.
+
+### Final Test Count
+- 3 passing tests in `types.test.ts`, 3 todo placeholders in scaffold test files
