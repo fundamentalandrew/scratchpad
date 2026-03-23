@@ -141,26 +141,25 @@ Note: This test requires that `PRFile` has `beforeContent` and `afterContent` fi
 **Test: agent is idempotent -- running twice with same input produces same output structure**
 
 - Run the agent twice with identical `ContextOutput` and the same mock Claude responses.
-- Assert both results have the same `scoredFiles` length, same `summary` values, and the same set of file paths in `criticalFiles`.
+- Assert both results have the same `scoredFiles` length, same `summary` values, same set of file paths in `criticalFiles`, and identical per-file scores.
 
 ### Test Group: Output Assembly and Risk Level Mapping
 
 **Test: risk level mapping correct -- 8-10 critical, 5-7 high, 3-4 medium, 0-2 low**
 
-- Mock the Claude client to return files with scores at boundary values: 10, 8, 7, 5, 4, 3, 2, 0.
+- Mock the Claude client to return files with scores at boundary values: 10, 8, 7, 5, 4, 3, 2 (from LLM).
+- Include an ignored file (`package-lock.json`) for score 0 boundary.
 - Verify each file's `riskLevel` matches the expected mapping.
 
-**Test: merge precedence -- LLM override of pre-classified file uses higher score**
+**REMOVED: merge precedence -- LLM override of pre-classified file uses higher score**
 
-- Include a `.ts` file that the AST layer classifies as format-only (score 1).
-- Also include it in the LLM response with a higher score (e.g., score 6, indicating the LLM detected risk the AST missed).
-- Verify the final score in `scoredFiles` is 6 (the higher value), not 1.
+- Removed during implementation: format-only files with high confidence are `continue`d past the AST stage and never reach LLM scoring. The merge scenario specified here cannot occur in the real pipeline. Merge precedence is tested at the unit level in `analysis-agent-orchestration.test.ts`.
 
-**Test: merge precedence -- pre-classified file not mentioned by LLM keeps deterministic score**
+**Test: AST-classified file not mentioned by LLM keeps deterministic score**
 
-- Include a `.ts` file that the AST layer classifies as format-only (score 1).
-- The LLM response does not mention this file.
-- Verify the file keeps its deterministic score of 1 in `scoredFiles`.
+- Include a `.ts` file with format-only changes (whitespace reformatting).
+- The LLM returns no scores for this file.
+- Verify the file keeps its deterministic score (≤2) in `scoredFiles`.
 
 **Test: criticalFiles subset contains only files with score >= criticalThreshold**
 
