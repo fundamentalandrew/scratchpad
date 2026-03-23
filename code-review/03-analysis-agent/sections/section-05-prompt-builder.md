@@ -111,15 +111,18 @@ Constructs the full system prompt as a single string. The prompt is assembled fr
 
 Constructs the user message for a single batch of files to score.
 
-The `LowRiskSummary` type (define locally or import from scoring types):
+The `LowRiskSummary` type is imported from `scoring/types.ts` (defined in section 01):
 
 ```typescript
-type LowRiskSummary = {
+// Actual type as defined in types.ts
+interface LowRiskSummary {
   path: string
-  classification: string  // e.g., "format-only", "rename-only", "moved-function"
-  score: number
+  changeType: ClassificationResult["changeType"]  // "format-only" | "rename-only" | "moved-function" | "structural"
+  suggestedScore: number
 }
 ```
+
+**Note:** The original plan specified `classification` and `score` fields, but the actual types defined in section 01 use `changeType` and `suggestedScore`. The implementation follows the actual types.
 
 **Structure of the batch prompt:**
 
