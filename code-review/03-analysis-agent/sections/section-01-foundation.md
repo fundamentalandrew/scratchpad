@@ -262,18 +262,22 @@ The analysis agent imports these from `01-core-infrastructure` via the `@core` p
 | `Logger` | `@core/utils/logger.js` | Logging interface |
 | `filterFiles()` | `@core/utils/file-filter.js` | Glob-based file filtering utility |
 
-## Implementation Checklist
+## Implementation Notes
 
-1. Create the directory structure (`src/deterministic/`, `src/scoring/`, `tests/unit/`, `tests/integration/`)
-2. Create `package.json` with tree-sitter and other dependencies
-3. Create `tsconfig.json` with `@core` path alias
-4. Create `vitest.config.ts` with test include patterns for both `src/` and `tests/`
-5. Create `src/deterministic/types.ts` with `ClassificationResult`, `FunctionInfo`, `FilterResult`, `AnalysisFile`
-6. Create `src/scoring/types.ts` with `ScoringContext`, `ScoringFile`, `FileBatch`, `LLMScoringResult`, `LowRiskSummary`
-7. Create stub files for all module placeholders (pattern-filter, ast-analyzer, ast-classifier, subtree-hash, llm-scorer, prompt-builder, batch-builder)
-8. Create `src/analysis-agent.ts` stub with correct signature
-9. Create `src/index.ts` barrel exports
-10. Create `tests/unit/foundation.test.ts` smoke test
-11. Run `npm install` to install dependencies
-12. Run `npx tsc --noEmit` to verify type resolution
-13. Run `npx vitest run` to verify test infrastructure works
+### Deviations from Plan
+
+- **`scoring/types.ts`**: Code review identified that `LLMScoringResult.changeType`, `LowRiskSummary.changeType`, and `ScoringFile.status` were typed as bare `string` in the initial implementation. Fixed to use proper union types: `ScoringChangeType` (union of 8 change types), `ClassificationResult["changeType"]` (indexed access type), and `FileStatus` (union of 4 statuses). Two new exported types added: `ScoringChangeType`, `FileStatus`.
+- **tree-sitter dependency**: Required `npm install --legacy-peer-deps` due to peer dependency conflict between tree-sitter@0.22.4 and grammar packages wanting ^0.21.x. Peer deps are optional, so this is safe.
+- **Test imports**: All type imports in the smoke test use the barrel (`src/index.js`) rather than direct source paths, validating that re-exports work correctly.
+- **`tests/integration/.gitkeep`**: Added to ensure the directory is tracked by git.
+
+### Files Created
+
+- `package.json`, `tsconfig.json`, `vitest.config.ts`
+- `src/deterministic/types.ts`, `src/scoring/types.ts`
+- `src/analysis-agent.ts` (stub)
+- `src/index.ts` (barrel exports)
+- `src/deterministic/pattern-filter.ts`, `ast-analyzer.ts`, `ast-classifier.ts`, `subtree-hash.ts` (stubs)
+- `src/scoring/llm-scorer.ts`, `prompt-builder.ts`, `batch-builder.ts` (stubs)
+- `tests/unit/foundation.test.ts` (5 tests, all passing)
+- `tests/integration/.gitkeep`
