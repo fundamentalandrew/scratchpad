@@ -35,6 +35,14 @@
     "section-05-unit-tests": {
       "status": "complete",
       "commit_hash": "629aaa8"
+    },
+    "section-06-integration-tests": {
+      "status": "complete",
+      "commit_hash": "a462fbc"
+    },
+    "section-07-analysis-passthrough": {
+      "status": "complete",
+      "commit_hash": "d261380"
     }
   },
   "pre_commit": {
