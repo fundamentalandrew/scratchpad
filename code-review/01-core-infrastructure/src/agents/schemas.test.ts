@@ -157,6 +157,8 @@ describe("ReviewOutputSchema", () => {
       ],
       coreDecision: "Needs changes before merge",
       focusAreas: ["input validation", "error handling"],
+      safeToIgnore: [],
+      summary: "Needs changes due to XSS risk.",
     });
     expect(result.success).toBe(true);
   });

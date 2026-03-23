@@ -17,6 +17,15 @@ export const RecommendationSchema = z.object({
   category: z.string(),
   message: z.string(),
   suggestion: z.string().optional(),
+  humanCheckNeeded: z.string().optional(),
+  estimatedReviewTime: z.enum(["5", "15", "30", "60"]).optional(),
+  score: z.number().min(0).max(10).optional(),
+});
+
+export const IgnoreGroupSchema = z.object({
+  label: z.string(),
+  count: z.number(),
+  description: z.string(),
 });
 
 export const ReferencedIssueSchema = z.object({
@@ -69,21 +78,22 @@ const RepositorySchema = z.object({
   defaultBranch: z.string(),
 });
 
-export const ContextOutputSchema = z
-  .object({
-    mode: ReviewModeSchema,
-    repository: RepositorySchema,
-    pr: PRSchema.optional(),
-    repoFiles: z.array(z.object({ path: z.string() })).optional(),
-    domainRules: z.string().nullable(),
-    architectureDoc: z.string().nullable(),
-    referencedIssues: z.array(ReferencedIssueSchema).optional(),
-    comments: z.array(ReviewCommentSchema).optional(),
-    techStack: TechStackSchema.optional(),
-  })
-  .refine((data) => data.pr !== undefined || data.repoFiles !== undefined, {
-    message: "Either pr or repoFiles must be provided",
-  });
+const ContextOutputBaseSchema = z.object({
+  mode: ReviewModeSchema,
+  repository: RepositorySchema,
+  pr: PRSchema.optional(),
+  repoFiles: z.array(z.object({ path: z.string() })).optional(),
+  domainRules: z.string().nullable(),
+  architectureDoc: z.string().nullable(),
+  referencedIssues: z.array(ReferencedIssueSchema).optional(),
+  comments: z.array(ReviewCommentSchema).optional(),
+  techStack: TechStackSchema.optional(),
+});
+
+export const ContextOutputSchema = ContextOutputBaseSchema.refine(
+  (data) => data.pr !== undefined || data.repoFiles !== undefined,
+  { message: "Either pr or repoFiles must be provided" },
+);
 
 export const AnalysisOutputSchema = z.object({
   scoredFiles: z.array(FileScoreSchema),
@@ -94,16 +104,20 @@ export const AnalysisOutputSchema = z.object({
     highCount: z.number(),
     categories: z.record(z.string(), z.number()),
   }),
+  contextPassthrough: ContextOutputBaseSchema.optional(),
 });
 
 export const ReviewOutputSchema = z.object({
   recommendations: z.array(RecommendationSchema),
   coreDecision: z.string(),
   focusAreas: z.array(z.string()),
+  safeToIgnore: z.array(IgnoreGroupSchema),
+  summary: z.string(),
 });
 
 export type FileScore = z.infer<typeof FileScoreSchema>;
 export type Recommendation = z.infer<typeof RecommendationSchema>;
+export type IgnoreGroup = z.infer<typeof IgnoreGroupSchema>;
 export type ContextOutput = z.infer<typeof ContextOutputSchema>;
 export type AnalysisOutput = z.infer<typeof AnalysisOutputSchema>;
 export type ReviewOutput = z.infer<typeof ReviewOutputSchema>;

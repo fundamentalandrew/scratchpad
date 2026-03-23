@@ -212,5 +212,16 @@ The pipeline test ("full pipeline with all stubs runs end-to-end without errors"
 4. `ReviewOutputSchema` has two new required fields: `safeToIgnore`, `summary`
 5. `AnalysisOutputSchema` has one new optional field: `contextPassthrough`
 6. `createStubReviewAgent` return value includes `safeToIgnore` and `summary`
+
+## Implementation Notes (Post-Implementation)
+
+### Deviations from Plan
+- **contextPassthrough schema**: Extracted `ContextOutputBaseSchema` (without `.refine()`) and used it for `contextPassthrough` field instead of `ContextOutputSchema.optional()`. This avoids leaking the pr/repoFiles refinement check into passthrough data. Code review finding, user-approved.
+- **Additional tests**: Added 2 tests beyond the plan's 8: negative test for `score` bounds (reject -1, 11) and negative test for `ReviewOutputSchema` missing required fields.
+- **Existing test updated**: `schemas.test.ts` ReviewOutputSchema test case updated to include new required `safeToIgnore` and `summary` fields.
+
+### Final Test Count
+- 11 tests in `schemas.review.test.ts` (8 planned + 2 negative tests + 1 score bounds)
+- All 325 project tests pass (5 pre-existing import resolution failures in 02-context-agent and 03-analysis-agent are unrelated)
 7. `types.ts` re-exports `IgnoreGroup`
 8. Run `cd /home/andrew/code/scratchpad/code-review/01-core-infrastructure && npx vitest run` -- all existing tests plus new tests pass

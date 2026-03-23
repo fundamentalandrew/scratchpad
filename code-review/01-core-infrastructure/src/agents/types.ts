@@ -3,4 +3,5 @@ export type {
   ContextOutput,
   AnalysisOutput,
   ReviewOutput,
+  IgnoreGroup,
 } from "./schemas.js";

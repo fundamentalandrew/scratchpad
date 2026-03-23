@@ -88,6 +88,10 @@ export function createStubReviewAgent(logger?: Logger): Agent<AnalysisOutput, Re
         ],
         coreDecision: "Approve with minor suggestions",
         focusAreas: ["Error handling in entry point", "Documentation accuracy"],
+        safeToIgnore: [
+          { label: "tests/", count: 0, description: "No test files in stub" },
+        ],
+        summary: "Stub review: minor suggestions for error handling and documentation.",
       };
     },
   };
