@@ -218,3 +218,17 @@ A reasonable regex approach: replace `(^|\s)@(\w)` with `$1@\u200b$2`. This pres
 These functions are consumed by:
 - **section-04-output-formatters**: `formatPRComment()` and `formatMarkdownFile()` both call all four helpers
 - `sanitizeForGitHub` is specifically called on LLM-generated content (recommendation messages, suggestions) before inclusion in PR comment output
+
+## Implementation Notes
+
+### Files Created
+- `05-interactive-output/src/formatters/shared.ts` — all four exported functions
+- `05-interactive-output/tests/formatters/shared.test.ts` — 12 tests covering all functions
+
+### Design Decisions (from code review)
+- **Sanitization is caller responsibility:** `formatRecommendationBlock` does NOT call `sanitizeForGitHub` internally. Section-04 callers are responsible for sanitizing LLM-generated content before passing to PR comment output. This keeps formatters pure and composable.
+- **Regex scope:** The `sanitizeForGitHub` regex uses `(^|\s)@(\w)` as specified in the plan. Parenthetical mentions like `(@orgname)` are not caught, which is an accepted tradeoff — unlikely in LLM output and broadening risks email false positives.
+
+### Test Coverage
+- 12 tests, all passing
+- Covers: all fields present/minimal, annotate notes, empty groups, empty focusAreas (asserts heading absent), total recommendations count, @mention sanitization, email preservation

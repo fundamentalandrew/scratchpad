@@ -15,7 +15,16 @@
     "section-06-publishers",
     "section-07-output-agent"
   ],
-  "sections_state": {},
+  "sections_state": {
+    "section-01-setup": {
+      "status": "complete",
+      "commit_hash": "39f919c"
+    },
+    "section-02-core-github": {
+      "status": "complete",
+      "commit_hash": "2e3bed7"
+    }
+  },
   "pre_commit": {
     "present": false,
     "type": "none",
