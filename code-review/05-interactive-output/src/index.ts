@@ -14,4 +14,4 @@ export { runInteractiveReview } from "./interactive.js";
 export { publishPRComment, PR_COMMENT_MARKER } from "./publishers/github.js";
 export { publishMarkdownFile } from "./publishers/file.js";
 
-// TODO: export { createOutputAgent } from "./output-agent.js"; (section-07)
+export { createOutputAgent } from "./output-agent.js";

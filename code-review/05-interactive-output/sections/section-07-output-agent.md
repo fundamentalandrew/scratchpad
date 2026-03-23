@@ -160,3 +160,19 @@ Follow the same agent factory pattern established in `04-review-agent/src/review
 - Returns an object literal with `name`, `idempotent`, and `async run()` 
 - The `run()` method receives typed input and returns typed output
 - Context passthrough is accessed from `deps.contextOutput` (injected at construction time, unlike the review agent which reads it from `input.contextPassthrough`)
+
+## Implementation Notes
+
+**Files created:**
+- `src/output-agent.ts` - Agent factory with `createOutputAgent`
+- `tests/output-agent.test.ts` - 8 tests covering all destinations and edge cases
+
+**Files modified:**
+- `src/index.ts` - Added `createOutputAgent` to public exports
+
+**Deviations from plan:**
+- Added defensive runtime guard (`if (!deps.contextOutput.pr)`) before accessing PR fields in the pr-comment branch, replacing the non-null assertion `pr!.number`. This was flagged during code review as a crash risk if the interactive layer ever returns "pr-comment" without PR context.
+- Added a test for `totalFilesReviewed` in repo mode using markdown-file destination (not in original plan).
+- Helper functions `getTotalFilesReviewed` and `buildPrUrl` extracted as module-private utilities for clarity.
+
+**Test count:** 8 tests, all passing.

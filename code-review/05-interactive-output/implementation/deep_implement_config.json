@@ -35,6 +35,10 @@
     "section-05-interactive": {
       "status": "complete",
       "commit_hash": "a2fbbe9"
+    },
+    "section-06-publishers": {
+      "status": "complete",
+      "commit_hash": "097ba6b"
     }
   },
   "pre_commit": {
