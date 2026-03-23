@@ -31,6 +31,10 @@
     "section-04-output-formatters": {
       "status": "complete",
       "commit_hash": "079a8ce"
+    },
+    "section-05-interactive": {
+      "status": "complete",
+      "commit_hash": "a2fbbe9"
     }
   },
   "pre_commit": {

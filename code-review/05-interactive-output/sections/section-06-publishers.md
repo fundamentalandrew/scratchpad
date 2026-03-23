@@ -153,3 +153,21 @@ import path from "node:path";
 Both publishers should be exported from their respective files as named exports. They will be consumed by the output agent (section 07). The `PR_COMMENT_MARKER` constant should also be exported since the formatter (section 04) needs it for embedding the marker in the comment body.
 
 Ensure these are re-exported from `src/index.ts` (set up in section 01) so the output agent can import them from the package root.
+
+---
+
+## Implementation Notes
+
+**Files created:**
+- `05-interactive-output/src/publishers/github.ts` - GitHub PR comment publisher with severity-aware truncation
+- `05-interactive-output/src/publishers/file.ts` - Markdown file publisher
+- `05-interactive-output/tests/publishers/github.test.ts` - 7 tests
+- `05-interactive-output/tests/publishers/file.test.ts` - 4 tests
+
+**Also modified:**
+- `05-interactive-output/src/index.ts` - Added re-exports for publishers, interactive review, and PR_COMMENT_MARKER
+
+**Deviations from plan:**
+- Truncation uses structured block parsing (splits on `**filepath**\n**Severity:**` pattern) to remove lowest-severity blocks first, with simple truncation as fallback (code review finding - user chose severity-aware approach)
+- Added error logging via `logger.error` before re-throwing in `publishPRComment` (code review finding)
+- Test for "truncation removes lowest-severity first" uses realistic formatted markdown blocks matching the shared formatter output
