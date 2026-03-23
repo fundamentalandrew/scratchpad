@@ -1,8 +1,16 @@
 # Section 06: Integration Tests
 
+## Status: IMPLEMENTED
+
 ## Overview
 
-This section covers the integration tests for the review agent. These tests exercise the full pipeline with real prompt construction and a mocked `ClaudeClient`, validating that the review agent produces valid `ReviewOutput` conforming to the Zod schema. The integration tests live at `/home/andrew/code/scratchpad/code-review/04-review-agent/tests/integration/review-agent.test.ts`.
+Integration tests for the review agent at `tests/integration/review-agent.test.ts`. Tests exercise the full pipeline with real prompt construction and mocked `ClaudeClient`, validating `ReviewOutput` schema conformance.
+
+## Deviations from Plan
+
+- Used `defaultConfig` from `@core/config/schema.js` instead of a local helper (simpler, uses actual runtime config)
+- Code review added severity assertions to full pipeline test, coreDecision assertions to empty/all-ignored tests
+- 9 tests total, all passing
 
 ## Dependencies
 

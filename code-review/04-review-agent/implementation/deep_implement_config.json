@@ -31,6 +31,10 @@
     "section-04-review-agent": {
       "status": "complete",
       "commit_hash": "dbd9bed"
+    },
+    "section-05-unit-tests": {
+      "status": "complete",
+      "commit_hash": "629aaa8"
     }
   },
   "pre_commit": {
