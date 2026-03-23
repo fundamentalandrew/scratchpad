@@ -283,3 +283,15 @@ Update `/home/andrew/code/scratchpad/code-review/03-analysis-agent/src/index.ts`
 7. Replace the stub `createAnalysisAgent` in `src/analysis-agent.ts` with the real implementation
 8. Verify output conforms to `AnalysisOutputSchema` by calling `.parse()` in tests
 9. Run `npx vitest run` to confirm all tests pass
+
+## Implementation Notes
+
+- **Files modified:** `src/analysis-agent.ts` (replaced stub), `tests/unit/foundation.test.ts` (updated obsolete stub test)
+- **Files created:** `tests/unit/analysis-agent-orchestration.test.ts`
+- **Tests:** 24 orchestration tests + 1 updated foundation test (107 total passing)
+- **Deviations from plan:**
+  - Added fallback scoring (score 5) for files the LLM omits from its response, per code review decision
+  - Binary files get descriptive placeholder diff `[binary or empty file: <path>]` instead of empty string
+  - ScoringContext built once and reused for both system prompt estimation and scoreFiles() call
+  - Added `?? []` guard on `deps.config.ignorePatterns` for robustness
+  - Test file uses inline Zod schema definitions instead of `@core/*` imports (vitest alias doesn't resolve `.js` extensions for direct test imports)

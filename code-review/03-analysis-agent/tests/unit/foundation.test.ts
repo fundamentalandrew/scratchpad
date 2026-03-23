@@ -28,12 +28,13 @@ describe("foundation smoke tests", () => {
     expect(typeof agent.run).toBe("function");
   });
 
-  it("stub run() rejects with not implemented", async () => {
+  it("run() returns empty output when no pr provided", async () => {
     const agent = createAnalysisAgent({
       claude: {} as any,
       config: {} as any,
     });
-    await expect(agent.run({} as any)).rejects.toThrow("Not implemented");
+    const result = await agent.run({ mode: "repo", repository: { owner: "o", repo: "r", defaultBranch: "main" }, repoFiles: [], domainRules: null, architectureDoc: null } as any);
+    expect(result.scoredFiles).toEqual([]);
   });
 
   it("deterministic types are importable", () => {
