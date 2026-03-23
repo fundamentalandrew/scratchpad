@@ -1,25 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { z } from "zod";
 import type { ClassificationResult } from "../../src/deterministic/types.js";
-
-// Inline minimal schema for validation (mirrors @core/agents/schemas.ts)
-const RiskLevelSchema = z.enum(["critical", "high", "medium", "low"]);
-const FileScoreSchema = z.object({
-  path: z.string(),
-  score: z.number().min(0).max(10),
-  riskLevel: RiskLevelSchema,
-  reasons: z.array(z.string()),
-});
-const AnalysisOutputSchema = z.object({
-  scoredFiles: z.array(FileScoreSchema),
-  criticalFiles: z.array(FileScoreSchema),
-  summary: z.object({
-    totalFiles: z.number(),
-    criticalCount: z.number(),
-    highCount: z.number(),
-    categories: z.record(z.string(), z.number()),
-  }),
-});
+import { AnalysisOutputSchema } from "@core/agents/schemas.js";
 
 type CodeReviewConfig = {
   ignorePatterns: string[];
@@ -508,6 +490,45 @@ describe("analysis-agent orchestration", () => {
     expect(result.summary.totalFiles).toBe(0);
   });
 
+  // --- Context Passthrough ---
+
+  it("analysis agent output includes contextPassthrough with the input ContextOutput", async () => {
+    const input = makeInput([{ path: "src/index.ts" }]);
+    const prFiles = input.pr!.files;
+    mockFilterChangedFiles.mockReturnValue({
+      passed: prFiles,
+      ignored: [],
+      ignoredScores: [],
+    });
+    mockBuildBatches.mockReturnValue([{
+      files: [{ path: "src/index.ts", diff: "diff", status: "modified" }],
+      estimatedTokens: 100,
+      isLargeFile: false,
+    }]);
+    mockScoreFiles.mockResolvedValue([{
+      file: "src/index.ts",
+      score: 5,
+      reason: "Logic change",
+      changeType: "logic-change",
+    }]);
+
+    const agent = createAnalysisAgent(makeDeps());
+    const result = await agent.run(input);
+
+    expect(result.contextPassthrough).toEqual(input);
+    expect(() => AnalysisOutputSchema.parse(result)).not.toThrow();
+  });
+
+  it("contextPassthrough is set even when PR has zero files (empty output path)", async () => {
+    const input = makeInput([]);
+    mockFilterChangedFiles.mockReturnValue({ passed: [], ignored: [], ignoredScores: [] });
+
+    const agent = createAnalysisAgent(makeDeps());
+    const result = await agent.run(input);
+
+    expect(result.contextPassthrough).toEqual(input);
+  });
+
   // --- Edge: no pr in repo mode ---
 
   it("returns empty output when pr is undefined (repo mode)", async () => {
@@ -524,6 +545,7 @@ describe("analysis-agent orchestration", () => {
 
     expect(result.scoredFiles).toEqual([]);
     expect(result.summary.totalFiles).toBe(0);
+    expect(result.contextPassthrough).toEqual(input);
     expect(mockFilterChangedFiles).not.toHaveBeenCalled();
   });
 });

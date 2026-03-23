@@ -21,11 +21,12 @@ function mapRiskLevel(score: number): RiskLevel {
   return "low";
 }
 
-function emptyOutput(): AnalysisOutput {
+function emptyOutput(input?: ContextOutput): AnalysisOutput {
   return {
     scoredFiles: [],
     criticalFiles: [],
     summary: { totalFiles: 0, criticalCount: 0, highCount: 0, categories: {} },
+    ...(input ? { contextPassthrough: input } : {}),
   };
 }
 
@@ -40,12 +41,12 @@ export function createAnalysisAgent(deps: {
     async run(input: ContextOutput): Promise<AnalysisOutput> {
       // Step 1: Extract file list — PR mode only
       if (!input.pr) {
-        return emptyOutput();
+        return emptyOutput(input);
       }
 
       const prFiles = input.pr.files;
       if (prFiles.length === 0) {
-        return emptyOutput();
+        return emptyOutput(input);
       }
 
       // Step 2: Triage files
@@ -201,6 +202,7 @@ export function createAnalysisAgent(deps: {
           highCount: scoredFiles.filter((f) => f.riskLevel === "high").length,
           categories,
         },
+        contextPassthrough: input,
       };
     },
   };

@@ -480,6 +480,38 @@ describe("Analysis Agent Integration", () => {
     });
   });
 
+  describe("Context Passthrough", () => {
+    it("analysis agent output includes contextPassthrough matching input ContextOutput", async () => {
+      const mockClaude = buildMockClaudeClient([
+        { file: "src/handler.py", score: 5, changeType: "logic-change" },
+      ]);
+
+      const input = buildContextOutput([
+        { path: "src/handler.py", status: "modified" },
+      ]);
+
+      const agent = createAnalysisAgent({ claude: mockClaude as any, config: defaultConfig() });
+      const result = await agent.run(input);
+
+      expect(result.contextPassthrough).toBeDefined();
+      expect(result.contextPassthrough!.mode).toBe(input.mode);
+      expect(result.contextPassthrough!.pr!.title).toBe(input.pr.title);
+      expect(() => AnalysisOutputSchema.parse(result)).not.toThrow();
+    });
+
+    it("contextPassthrough is set even when PR has zero files (empty output path)", async () => {
+      const mockClaude = buildMockClaudeClient([]);
+      const input = buildContextOutput([]);
+
+      const agent = createAnalysisAgent({ claude: mockClaude as any, config: defaultConfig() });
+      const result = await agent.run(input);
+
+      expect(result.contextPassthrough).toBeDefined();
+      expect(result.contextPassthrough).toEqual(input);
+      expect(() => AnalysisOutputSchema.parse(result)).not.toThrow();
+    });
+  });
+
   describe("Configuration", () => {
     it("default analysis ignore patterns applied", async () => {
       const mockClaude = buildMockClaudeClient([]);

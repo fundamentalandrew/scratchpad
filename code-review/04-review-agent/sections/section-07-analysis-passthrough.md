@@ -134,3 +134,24 @@ After implementation, run the following to verify:
 1. All existing analysis agent tests pass: `cd /home/andrew/code/scratchpad/code-review/03-analysis-agent && npx vitest run`
 2. The new contextPassthrough tests pass.
 3. Core infrastructure tests still pass: `cd /home/andrew/code/scratchpad/code-review/01-core-infrastructure && npx vitest run`
+
+## Implementation Notes
+
+### Actual Changes Made
+
+**Files modified (as planned):**
+- `/home/andrew/code/scratchpad/code-review/03-analysis-agent/src/analysis-agent.ts` — `emptyOutput()` now accepts optional `ContextOutput` param; both early returns and the final return include `contextPassthrough`.
+- `/home/andrew/code/scratchpad/code-review/03-analysis-agent/tests/unit/analysis-agent-orchestration.test.ts` — Added 2 new tests (contextPassthrough with files, contextPassthrough with empty PR). Updated existing repo-mode test to verify contextPassthrough.
+- `/home/andrew/code/scratchpad/code-review/03-analysis-agent/tests/integration/analysis-agent.test.ts` — Added 2 new tests (contextPassthrough with files, contextPassthrough with empty PR).
+
+### Deviations from Plan
+
+- **Inline schema replaced with canonical import:** The plan suggested either updating the inline `AnalysisOutputSchema` in the unit test or importing from `@core/agents/schemas.js`. Code review identified the inline schema as stale, so we replaced it with the canonical import to avoid future divergence.
+- **Schema validation added to all new tests:** Code review identified that the plan's requirement for schema conformance validation was missing from some tests. Added `AnalysisOutputSchema.parse(result)` checks.
+- **Repo mode test updated:** Code review identified that the existing repo-mode early-return path also needed a `contextPassthrough` assertion. Added to existing test.
+
+### Test Count
+
+- 132 total tests in 03-analysis-agent (all passing)
+- 4 new tests added (2 unit, 2 integration)
+- 1 existing test updated (repo mode)
