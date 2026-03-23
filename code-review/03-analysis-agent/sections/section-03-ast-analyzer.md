@@ -141,6 +141,12 @@ Tree-sitter is error-tolerant: it always returns a tree, even for syntactically 
 
 The implementation should be straightforward -- approximately 40-60 lines of code. No classes needed; module-level state for cached parsers with exported functions is sufficient.
 
+## Implementation Notes
+
+- **Files created:** `src/deterministic/ast-analyzer.ts` (implementation), `tests/unit/ast-analyzer.test.ts` (15 tests)
+- **Deviations from plan:** Added try/catch error handling around grammar loading in `getParser()` per code review. Resets cached parser to null on failure. Return type uses `Parser.Tree` (namespace-qualified) rather than a standalone `Tree` import — functionally identical.
+- **Additional test coverage:** Added edge case tests for extensionless files (Makefile, Dockerfile), dotfiles (.gitignore), and `detectLanguage` null returns for these cases. Total: 15 tests (plan specified 7 test cases).
+
 ## Design Notes
 
 - **Why native tree-sitter and not WASM:** The plan specifies native bindings for speed. This is a CLI tool, not a browser app, so node-gyp compilation is acceptable. The project already has native dependencies.
