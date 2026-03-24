@@ -21,9 +21,14 @@ export const configSchema = z.object({
   architecturePath: z.string().default("./ARCHITECTURE.md"),
   apiKey: z.string().optional(),
   githubToken: z.string().optional(),
-  model: z.string().default("claude-sonnet-4-5-20250514"),
+  model: z.string().default("claude-sonnet-4-6"),
   maxRetries: z.number().min(0).default(3),
-  output: outputSchema.default({}),
+  output: outputSchema.default({
+    console: true,
+    markdown: false,
+    markdownPath: "./code-review-report.md",
+    githubComment: false,
+  }),
 }).strict();
 
 export const partialConfigSchema = configSchema.partial().strict();

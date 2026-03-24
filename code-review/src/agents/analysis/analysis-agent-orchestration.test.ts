@@ -70,7 +70,7 @@ function makeDeps(configOverrides: Partial<CodeReviewConfig> = {}) {
       criticalThreshold: 8,
       domainRulesPath: "./DOMAIN_RULES.md",
       architecturePath: "./ARCHITECTURE.md",
-      model: "claude-sonnet-4-5-20250514",
+      model: "claude-sonnet-4-6",
       maxRetries: 3,
       output: { console: true, markdown: false, markdownPath: "./report.md", githubComment: false },
       ...configOverrides,
@@ -213,7 +213,7 @@ describe("analysis-agent orchestration", () => {
       ignoredScores: [],
     });
     mockBuildBatches.mockReturnValue([{
-      files: [{ path: "src/old.ts", diff: "diff", status: "removed" }],
+      files: [{ path: "src/old.ts", diff: "diff", status: "deleted" }],
       estimatedTokens: 100,
       isLargeFile: false,
     }]);

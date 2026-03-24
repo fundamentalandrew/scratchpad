@@ -121,24 +121,65 @@ async function runRepoMode(params: {
 }): Promise<ContextOutput> {
   const { github, logger, owner, repo, config } = params;
 
-  // Step 1: Fetch file tree
-  logger?.verbose(`Fetching repository file tree for ${owner}/${repo}...`);
-  const filePaths = await github.getRepoTree(owner, repo);
+  // Step 1: Get default branch and recent commits
+  logger?.verbose(`Fetching default branch and recent commits for ${owner}/${repo}...`);
+  const defaultBranch = await github.getDefaultBranch(owner, repo);
+  const commits = await github.getRecentCommits(owner, repo, defaultBranch, 20);
 
-  // Step 2: Filter files
-  const filtered = filterFiles(filePaths, config.ignorePatterns, (p) => p);
+  if (commits.length < 2) {
+    logger?.warn("Not enough commits to compare — falling back to file tree only");
+    const filePaths = await github.getRepoTree(owner, repo, defaultBranch);
+    const filtered = filterFiles(filePaths, config.ignorePatterns, (p) => p);
+    const [techStack, domainResult] = await Promise.all([
+      detectTechStack({ github, owner, repo, filePaths: filtered, logger }),
+      loadDomainRules({ github, owner, repo, ref: defaultBranch, config, logger }),
+    ]);
+    return {
+      mode: "repo",
+      repository: { owner, repo, defaultBranch },
+      repoFiles: filtered.map((p) => ({ path: p })),
+      domainRules: domainResult.domainRules,
+      architectureDoc: domainResult.architectureDoc,
+      techStack,
+    };
+  }
 
-  // Step 3: Parallel fetch of tech stack and domain rules
-  logger?.verbose("Detecting tech stack and loading domain rules in parallel...");
-  const [techStack, domainResult] = await Promise.all([
-    detectTechStack({ github, owner, repo, filePaths: filtered, logger }),
-    loadDomainRules({ github, owner, repo, config, logger }),
+  // Step 2: Compare oldest fetched commit to HEAD to get aggregate diff
+  const baseSha = commits[commits.length - 1].sha;
+  const headSha = commits[0].sha;
+  logger?.verbose(`Comparing ${baseSha.slice(0, 7)}...${headSha.slice(0, 7)} (${commits.length} commits)`);
+
+  const [comparison, filePaths, domainResult] = await Promise.all([
+    github.compareCommits(owner, repo, baseSha, headSha),
+    github.getRepoTree(owner, repo, defaultBranch),
+    loadDomainRules({ github, owner, repo, ref: defaultBranch, config, logger }),
   ]);
+
+  // Step 3: Filter files
+  const filteredTree = filterFiles(filePaths, config.ignorePatterns, (p) => p);
+  const filteredChanges = filterFiles(comparison.files, config.ignorePatterns, (f) => f.path);
+
+  // Step 4: Detect tech stack
+  const techStack = await detectTechStack({ github, owner, repo, filePaths: filteredTree, logger });
 
   return {
     mode: "repo",
-    repository: { owner, repo, defaultBranch: "main" },
-    repoFiles: filtered.map((p) => ({ path: p })),
+    repository: { owner, repo, defaultBranch },
+    repoFiles: filteredTree.map((p) => ({ path: p })),
+    repoChanges: {
+      baseSha,
+      headSha,
+      commitCount: commits.length,
+      files: filteredChanges.map((f) => ({
+        path: f.path,
+        status: f.status,
+        additions: f.additions,
+        deletions: f.deletions,
+        patch: f.patch ?? null,
+        ...(f.previousPath ? { previousPath: f.previousPath } : {}),
+      })),
+      diff: comparison.diff,
+    },
     domainRules: domainResult.domainRules,
     architectureDoc: domainResult.architectureDoc,
     techStack,

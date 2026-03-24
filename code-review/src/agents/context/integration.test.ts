@@ -53,6 +53,9 @@ function createFullPRMock(): GitHubClient {
       },
     ),
     getRepoTree: vi.fn().mockResolvedValue([]),
+    getDefaultBranch: vi.fn().mockResolvedValue("main"),
+    getRecentCommits: vi.fn().mockResolvedValue([]),
+    compareCommits: vi.fn().mockResolvedValue({ files: [], diff: "" }),
     postPRComment: vi.fn().mockResolvedValue(undefined),
   } as unknown as GitHubClient;
   return mock;
@@ -72,6 +75,18 @@ function createFullRepoMock(): GitHubClient {
       "src/utils.ts",
       "README.md",
     ]),
+    getDefaultBranch: vi.fn().mockResolvedValue("main"),
+    getRecentCommits: vi.fn().mockResolvedValue([
+      { sha: "head123", message: "feat: add utils", author: "alice", date: "2026-03-24T00:00:00Z" },
+      { sha: "base456", message: "initial commit", author: "alice", date: "2026-03-23T00:00:00Z" },
+    ]),
+    compareCommits: vi.fn().mockResolvedValue({
+      files: [
+        { path: "src/index.ts", status: "modified", additions: 10, deletions: 2, patch: "@@ -1,5 +1,13 @@" },
+        { path: "src/utils.ts", status: "added", additions: 20, deletions: 0, patch: "@@ -0,0 +1,20 @@" },
+      ],
+      diff: "diff --git a/src/index.ts b/src/index.ts",
+    }),
     getFileContent: vi.fn().mockImplementation(
       async (_owner: string, _repo: string, path: string, _ref?: string) => {
         if (path === "package.json") {
@@ -167,6 +182,9 @@ describe("Integration: Context Agent", () => {
       getReferencedIssues: vi.fn().mockResolvedValue([]),
       getFileContent: vi.fn().mockResolvedValue(null),
       getRepoTree: vi.fn().mockResolvedValue([]),
+      getDefaultBranch: vi.fn().mockResolvedValue("main"),
+      getRecentCommits: vi.fn().mockResolvedValue([]),
+      compareCommits: vi.fn().mockResolvedValue({ files: [], diff: "" }),
       postPRComment: vi.fn().mockResolvedValue(undefined),
     } as unknown as GitHubClient;
 
@@ -204,6 +222,17 @@ describe("Integration: Context Agent", () => {
         "data/report.csv",
       ]),
       getFileContent: vi.fn().mockResolvedValue(null),
+      getDefaultBranch: vi.fn().mockResolvedValue("main"),
+      getRecentCommits: vi.fn().mockResolvedValue([
+        { sha: "aaa111", message: "add docs", author: "bob", date: "2026-03-24T00:00:00Z" },
+        { sha: "bbb222", message: "init", author: "bob", date: "2026-03-23T00:00:00Z" },
+      ]),
+      compareCommits: vi.fn().mockResolvedValue({
+        files: [
+          { path: "docs/readme.txt", status: "added", additions: 5, deletions: 0, patch: "@@ -0,0 +1,5 @@" },
+        ],
+        diff: "diff --git a/docs/readme.txt b/docs/readme.txt",
+      }),
       postPRComment: vi.fn().mockResolvedValue(undefined),
     } as unknown as GitHubClient;
 

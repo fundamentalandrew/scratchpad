@@ -83,6 +83,10 @@ export function buildUserPrompt(
       desc = desc.slice(0, 2000) + "...";
     }
     parts.push(`**Description:** ${desc}`);
+  } else if (context.repoChanges) {
+    parts.push(
+      `## Repository Changes\n\n**Repo:** ${context.repository.owner}/${context.repository.repo}\n**Branch:** ${context.repository.defaultBranch}\n**Commits analyzed:** ${context.repoChanges.commitCount}\n**Files changed:** ${context.repoChanges.files.length}`,
+    );
   }
 
   // Referenced issues
@@ -120,11 +124,12 @@ export function buildUserPrompt(
         fileLines.push(`- ${reason}`);
       }
 
-      // Additions/deletions from PR files
-      if (context.pr) {
-        const prFile = context.pr.files.find((f) => f.path === file.path);
-        if (prFile) {
-          fileLines.push(`Changes: +${prFile.additions} -${prFile.deletions}`);
+      // Additions/deletions from PR or repo change files
+      const sourceFiles = context.pr?.files ?? context.repoChanges?.files;
+      if (sourceFiles) {
+        const sourceFile = sourceFiles.find((f) => f.path === file.path);
+        if (sourceFile) {
+          fileLines.push(`Changes: +${sourceFile.additions} -${sourceFile.deletions}`);
         }
       }
 

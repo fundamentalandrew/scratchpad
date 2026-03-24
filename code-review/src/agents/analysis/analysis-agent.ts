@@ -39,18 +39,14 @@ export function createAnalysisAgent(deps: {
     name: "analysis",
     idempotent: true,
     async run(input: ContextOutput): Promise<AnalysisOutput> {
-      // Step 1: Extract file list — PR mode only
-      if (!input.pr) {
-        return emptyOutput(input);
-      }
-
-      const prFiles = input.pr.files;
-      if (prFiles.length === 0) {
+      // Step 1: Extract file list from PR or repo changes
+      const sourceFiles = input.pr?.files ?? input.repoChanges?.files;
+      if (!sourceFiles || sourceFiles.length === 0) {
         return emptyOutput(input);
       }
 
       // Step 2: Triage files
-      const analysisFiles: AnalysisFile[] = prFiles.map((f) => ({ ...f }));
+      const analysisFiles: AnalysisFile[] = sourceFiles.map((f) => ({ ...f }));
 
       // Step 3: Pattern filter
       const { passed, ignoredScores } = filterChangedFiles(
@@ -120,8 +116,8 @@ export function createAnalysisAgent(deps: {
         domainRules: input.domainRules,
         architectureDoc: input.architectureDoc,
         techStack: input.techStack ?? { languages: [], frameworks: [], dependencies: {} },
-        prTitle: input.pr.title,
-        prDescription: input.pr.description,
+        prTitle: input.pr?.title ?? `Repository review: ${input.repository.owner}/${input.repository.repo}`,
+        prDescription: input.pr?.description ?? `Analysis of recent ${input.repoChanges?.commitCount ?? 0} commits on ${input.repository.defaultBranch}`,
       };
       const systemPrompt = buildSystemPrompt(scoringContext);
       const systemPromptTokens = estimateTokens(systemPrompt);

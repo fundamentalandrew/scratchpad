@@ -49,6 +49,15 @@ function createMockGitHub() {
     getReferencedIssues: vi.fn().mockResolvedValue([]),
     getFileContent: vi.fn().mockResolvedValue(null),
     getRepoTree: vi.fn().mockResolvedValue([]),
+    getDefaultBranch: vi.fn().mockResolvedValue("main"),
+    getRecentCommits: vi.fn().mockResolvedValue([
+      { sha: "abc123", message: "feat: latest commit", author: "testuser", date: "2026-03-24T00:00:00Z" },
+      { sha: "def456", message: "fix: previous commit", author: "testuser", date: "2026-03-23T00:00:00Z" },
+    ]),
+    compareCommits: vi.fn().mockResolvedValue({
+      files: [],
+      diff: "",
+    }),
   } as unknown as GitHubClient;
 }
 

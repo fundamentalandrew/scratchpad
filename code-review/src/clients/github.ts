@@ -295,6 +295,83 @@ export class GitHubClient {
     return issues;
   }
 
+  async getDefaultBranch(owner: string, repo: string): Promise<string> {
+    this.logger.verbose(`GitHub API: getDefaultBranch(${owner}/${repo})`);
+    try {
+      const { data } = await this.octokit.rest.repos.get({ owner, repo });
+      return data.default_branch;
+    } catch (e) {
+      throw new GitHubAPIError(`getDefaultBranch(${owner}/${repo}) failed: ${(e as Error).message}`, { cause: e as Error });
+    }
+  }
+
+  async getRecentCommits(owner: string, repo: string, branch?: string, count = 20): Promise<Array<{
+    sha: string;
+    message: string;
+    author: string;
+    date: string;
+  }>> {
+    this.logger.verbose(`GitHub API: getRecentCommits(${owner}/${repo}@${branch ?? "default"}, count=${count})`);
+    try {
+      const { data } = await this.octokit.rest.repos.listCommits({
+        owner,
+        repo,
+        ...(branch ? { sha: branch } : {}),
+        per_page: count,
+      });
+      return data.map((c) => ({
+        sha: c.sha,
+        message: c.commit.message,
+        author: c.commit.author?.name ?? c.author?.login ?? "unknown",
+        date: c.commit.author?.date ?? "",
+      }));
+    } catch (e) {
+      throw new GitHubAPIError(`getRecentCommits(${owner}/${repo}) failed: ${(e as Error).message}`, { cause: e as Error });
+    }
+  }
+
+  async compareCommits(owner: string, repo: string, base: string, head: string): Promise<{
+    files: Array<{
+      path: string;
+      status: string;
+      additions: number;
+      deletions: number;
+      patch?: string | null;
+      previousPath?: string;
+    }>;
+    diff: string;
+  }> {
+    this.logger.verbose(`GitHub API: compareCommits(${owner}/${repo}, ${base.slice(0, 7)}...${head.slice(0, 7)})`);
+    try {
+      const { data } = await this.octokit.rest.repos.compareCommitsWithBasehead({
+        owner,
+        repo,
+        basehead: `${base}...${head}`,
+      });
+
+      const files = (data.files ?? []).map((f) => ({
+        path: f.filename,
+        status: f.status ?? "modified",
+        additions: f.additions,
+        deletions: f.deletions,
+        patch: f.patch ?? null,
+        previousPath: f.previous_filename,
+      }));
+
+      // Fetch the diff format separately
+      const diffResponse = await this.octokit.rest.repos.compareCommitsWithBasehead({
+        owner,
+        repo,
+        basehead: `${base}...${head}`,
+        mediaType: { format: "diff" },
+      });
+
+      return { files, diff: diffResponse.data as unknown as string };
+    } catch (e) {
+      throw new GitHubAPIError(`compareCommits(${owner}/${repo}) failed: ${(e as Error).message}`, { cause: e as Error });
+    }
+  }
+
   async getRepoTree(owner: string, repo: string, branch?: string): Promise<string[]> {
     this.logger.verbose(`GitHub API: getRepoTree(${owner}/${repo}@${branch ?? "HEAD"})`);
     try {

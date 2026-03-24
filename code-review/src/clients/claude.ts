@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import type { Message, MessageCreateParamsNonStreaming } from "@anthropic-ai/sdk/resources/messages.js";
 import type { ZodSchema } from "zod";
 import { ClaudeAPIError } from "../utils/errors.js";
 import { redactSecrets } from "../utils/redact.js";
@@ -21,7 +22,7 @@ export class ClaudeClient {
       apiKey: options.apiKey,
       maxRetries: options.maxRetries ?? 3,
     });
-    this.model = options.model ?? "claude-sonnet-4-5-20250514";
+    this.model = options.model ?? "claude-sonnet-4-6";
     this.logger = options.logger;
   }
 
@@ -31,9 +32,9 @@ export class ClaudeClient {
     systemPrompt?: string;
     maxTokens?: number;
   }): Promise<{ data: T; usage: { inputTokens: number; outputTokens: number } }> {
-    const jsonSchema = options.schema.toJSONSchema();
+    const jsonSchema = stripUnsupportedProperties(options.schema.toJSONSchema()) as Record<string, unknown>;
 
-    const requestParams: Record<string, unknown> = {
+    const requestParams: MessageCreateParamsNonStreaming = {
       model: this.model,
       max_tokens: options.maxTokens ?? 4096,
       messages: options.messages,
@@ -43,14 +44,11 @@ export class ClaudeClient {
           schema: jsonSchema,
         },
       },
+      ...(options.systemPrompt !== undefined ? { system: options.systemPrompt } : {}),
     };
 
-    if (options.systemPrompt !== undefined) {
-      requestParams.system = options.systemPrompt;
-    }
-
     const startTime = Date.now();
-    const response = await this.client.messages.create(requestParams as Parameters<typeof this.client.messages.create>[0]);
+    const response: Message = await this.client.messages.create(requestParams);
     const duration = Date.now() - startTime;
 
     if (response.stop_reason === "refusal") {
@@ -58,8 +56,8 @@ export class ClaudeClient {
     }
 
     const text = response.content
-      .filter((block): block is { type: "text"; text: string } => block.type === "text")
-      .map((block) => block.text)
+      .filter((block) => block.type === "text")
+      .map((block) => (block as { type: "text"; text: string }).text)
       .join("");
 
     let parsed: unknown;
@@ -103,4 +101,23 @@ export class ClaudeClient {
       totalOutputTokens: this.totalOutputTokens,
     };
   }
+}
+
+const UNSUPPORTED_NUMBER_PROPS = ["minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum"];
+
+function stripUnsupportedProperties(schema: unknown): unknown {
+  if (schema === null || typeof schema !== "object") return schema;
+  if (Array.isArray(schema)) return schema.map(stripUnsupportedProperties);
+
+  const obj = schema as Record<string, unknown>;
+  const result: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (obj.type === "number" && UNSUPPORTED_NUMBER_PROPS.includes(key)) {
+      continue;
+    }
+    result[key] = stripUnsupportedProperties(value);
+  }
+
+  return result;
 }

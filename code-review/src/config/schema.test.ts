@@ -18,10 +18,10 @@ describe("configSchema", () => {
   });
 
   it("accepts partial config via partialConfigSchema", () => {
-    const result = partialConfigSchema.safeParse({ model: "claude-sonnet-4-5-20250514" });
+    const result = partialConfigSchema.safeParse({ model: "claude-sonnet-4-6" });
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.model).toBe("claude-sonnet-4-5-20250514");
+      expect(result.data.model).toBe("claude-sonnet-4-6");
     }
   });
 

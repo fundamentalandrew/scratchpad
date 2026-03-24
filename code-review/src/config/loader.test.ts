@@ -88,7 +88,7 @@ describe("loadConfig", () => {
     fs.mkdirSync(path.join(tmpDir, ".git"), { recursive: true });
     const config = loadConfig({ startDir: tmpDir });
     expect(config.criticalThreshold).toBe(8);
-    expect(config.model).toBe("claude-sonnet-4-5-20250514");
+    expect(config.model).toBe("claude-sonnet-4-6");
     expect(config.output.console).toBe(true);
   });
 
@@ -100,7 +100,7 @@ describe("loadConfig", () => {
     );
     const config = loadConfig({ startDir: tmpDir });
     expect(config.criticalThreshold).toBe(5);
-    expect(config.model).toBe("claude-sonnet-4-5-20250514"); // default preserved
+    expect(config.model).toBe("claude-sonnet-4-6"); // default preserved
   });
 
   it("environment variables override config file values (ANTHROPIC_API_KEY)", () => {

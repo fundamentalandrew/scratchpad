@@ -127,14 +127,14 @@ describe("Integration: Config + Pipeline Flow", () => {
   });
 
   it("loads config from temp directory and merges with defaults", () => {
-    const configData = { criticalThreshold: 5, model: "claude-sonnet-4-5-20250514" };
+    const configData = { criticalThreshold: 5, model: "claude-sonnet-4-6" };
     fs.writeFileSync(path.join(tmpDir, ".codereview.json"), JSON.stringify(configData));
     fs.mkdirSync(path.join(tmpDir, ".git"));
 
     const config = loadConfig({ startDir: tmpDir });
 
     expect(config.criticalThreshold).toBe(5);
-    expect(config.model).toBe("claude-sonnet-4-5-20250514");
+    expect(config.model).toBe("claude-sonnet-4-6");
     expect(config.maxRetries).toBe(defaultConfig.maxRetries);
     expect(config.output.console).toBe(true);
   });

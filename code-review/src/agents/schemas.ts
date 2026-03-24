@@ -83,6 +83,13 @@ const ContextOutputBaseSchema = z.object({
   repository: RepositorySchema,
   pr: PRSchema.optional(),
   repoFiles: z.array(z.object({ path: z.string() })).optional(),
+  repoChanges: z.object({
+    baseSha: z.string(),
+    headSha: z.string(),
+    commitCount: z.number(),
+    files: z.array(PRFileSchema),
+    diff: z.string(),
+  }).optional(),
   domainRules: z.string().nullable(),
   architectureDoc: z.string().nullable(),
   referencedIssues: z.array(ReferencedIssueSchema).optional(),

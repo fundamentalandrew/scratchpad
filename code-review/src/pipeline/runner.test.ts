@@ -140,9 +140,10 @@ describe("runPipeline", () => {
     };
 
     const promise = runPipeline<number>([nonRetryable], 1);
+    const assertion = expect(promise).rejects.toThrow(PipelineError);
     await vi.runAllTimersAsync();
 
-    await expect(promise).rejects.toThrow(PipelineError);
+    await assertion;
     expect(callCount).toBe(1);
   });
 
@@ -159,9 +160,10 @@ describe("runPipeline", () => {
     const promise = runPipeline<number>([alwaysFails, neverReached], 1, {
       maxRetries: 2,
     });
+    const assertion = expect(promise).rejects.toThrow(PipelineError);
     await vi.runAllTimersAsync();
 
-    await expect(promise).rejects.toThrow(PipelineError);
+    await assertion;
   });
 
   it("PipelineError includes agent name, attempt count, and original error", async () => {
@@ -175,6 +177,7 @@ describe("runPipeline", () => {
     };
 
     const promise = runPipeline<number>([failing], 1, { maxRetries: 3 });
+    promise.catch(() => {}); // prevent unhandled rejection before timers run
     await vi.runAllTimersAsync();
 
     try {

@@ -78,7 +78,7 @@ function defaultConfig(overrides: Record<string, unknown> = {}) {
     criticalThreshold: 8,
     domainRulesPath: "",
     architecturePath: "",
-    model: "claude-sonnet-4-5-20250514",
+    model: "claude-sonnet-4-6",
     maxRetries: 3,
     output: { console: false, markdown: false, markdownPath: "", githubComment: false },
     ...overrides,
