@@ -1,0 +1,12 @@
+{
+  "plugins": [
+    {
+      "name": "ssdlc-architect",
+      "version": "1.0.0",
+      "source": "./",
+      "description": "Transforms raw Product Briefs into ironclad SSDLC Developer Briefs through a 6-phase Socratic interrogation workflow",
+      "category": "development",
+      "tags": ["ssdlc", "security", "architecture", "threat-modeling", "appsec"]
+    }
+  ]
+}

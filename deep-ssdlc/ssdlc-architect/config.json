@@ -1,0 +1,20 @@
+{
+  "physical_gate": {
+    "max_questions_per_turn": 2,
+    "_comment": "Maximum questions the AI can ask before yielding to the user"
+  },
+  "adversarial_review": {
+    "model": "opus",
+    "enabled": true,
+    "_comment": "Model and toggle for Phase 5 adversarial review subagent"
+  },
+  "recon": {
+    "enabled": true,
+    "_comment": "Set false to skip Phase 2 codebase reconnaissance (e.g., greenfield projects)"
+  },
+  "output": {
+    "path": "./ssdlc-brief.md",
+    "working_dir": "./ssdlc-working",
+    "_comment": "Final brief output path and intermediate artifacts directory"
+  }
+}
