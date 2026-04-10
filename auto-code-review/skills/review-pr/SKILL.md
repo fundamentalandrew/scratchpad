@@ -1,3 +1,8 @@
+---
+name: review-pr
+description: "Code review a pull request with principal-engineer-grade analysis. Use when user says 'review PR', 'review pull request', 'code review PR', or invokes /review-pr <PR_NUMBER>."
+---
+
 # Principal-Grade AI Code Review
 
 ## Trigger
@@ -36,10 +41,10 @@ From any git repository with a GitHub remote:
 
 ## Instructions
 
-When this skill is invoked, execute the main orchestration script `review_pr.py` from this skill's installation directory. Pass the PR number as the first argument. The script's working directory MUST be the user's current repository (not this skill's directory).
+When this skill is invoked, execute the main orchestration script `review_pr.py` from the plugin root directory (two levels up from this SKILL.md). Pass the PR number as the first argument. The script's working directory MUST be the user's current repository (not this skill's directory).
 
 ```bash
-python3 <SKILL_DIR>/review_pr.py <PR_NUMBER>
+python3 <SKILL_DIR>/../../review_pr.py <PR_NUMBER>
 ```
 
 The script implements a strict 5-phase pipeline:
