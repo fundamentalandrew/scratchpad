@@ -8,13 +8,22 @@ from dataclasses import dataclass, field
 
 @dataclass
 class Finding:
-    agent: str
     severity: str
     file: str
     line: int
     title: str
     analysis: str
     suggestion: str
+    agents: list[str] = field(default_factory=list)
+
+
+def _encode_agents(agents: list[str]) -> str:
+    """Encode an agent list for the GH_META wire format (no whitespace allowed).
+
+    Spaces in agent names are replaced with `_`, and entries are joined with `|`.
+    The publisher reverses this when parsing the draft.
+    """
+    return "|".join(a.replace(" ", "_") for a in agents) or "unknown"
 
 
 @dataclass
@@ -81,11 +90,12 @@ def generate_draft(review: ReviewDraft, output_path: str) -> Path:
             lines.append(f"### {SEVERITY_EMOJI.get(current_severity, '')} {label}")
             lines.append("")
 
+        agents_display = ", ".join(finding.agents) if finding.agents else "unknown"
         # Hidden metadata tag — this is what the publisher parses
-        lines.append(f"<!-- GH_META: file={finding.file} line={finding.line} agent={finding.agent} severity={finding.severity} -->")
+        lines.append(f"<!-- GH_META: file={finding.file} line={finding.line} agents={_encode_agents(finding.agents)} severity={finding.severity} -->")
         lines.append(f"#### {finding.title}")
         lines.append(f"**File:** `{finding.file}:{finding.line}`  ")
-        lines.append(f"**Agent:** {finding.agent}  ")
+        lines.append(f"**Flagged by:** {agents_display}  ")
         lines.append("")
         lines.append(finding.analysis)
         lines.append("")

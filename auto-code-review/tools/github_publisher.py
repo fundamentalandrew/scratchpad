@@ -15,15 +15,20 @@ from pathlib import Path
 class InlineComment:
     file: str
     line: int
-    agent: str
+    agents: list[str]
     severity: str
     title: str
     body: str
 
 
 GH_META_PATTERN = re.compile(
-    r"<!--\s*GH_META:\s*file=(\S+)\s+line=(\d+)\s+agent=(\S+)\s+severity=(\S+)\s*-->"
+    r"<!--\s*GH_META:\s*file=(\S+)\s+line=(\d+)\s+agents=(\S+)\s+severity=(\S+)\s*-->"
 )
+
+
+def _decode_agents(encoded: str) -> list[str]:
+    """Reverse of draft_generator._encode_agents."""
+    return [part.replace("_", " ") for part in encoded.split("|") if part]
 
 
 def parse_draft(draft_path: str) -> list[InlineComment]:
@@ -39,7 +44,7 @@ def parse_draft(draft_path: str) -> list[InlineComment]:
         if match:
             file_path = match.group(1)
             line_num = int(match.group(2))
-            agent = match.group(3)
+            agents = _decode_agents(match.group(3))
             severity = match.group(4)
 
             # Collect the body: everything after the GH_META tag until the next
@@ -60,8 +65,10 @@ def parse_draft(draft_path: str) -> list[InlineComment]:
                 # Extract title from #### heading
                 if stripped.startswith("#### "):
                     title = stripped[5:].strip()
-                # Skip the File/Agent metadata lines from the body
-                elif stripped.startswith("**File:**") or stripped.startswith("**Agent:**"):
+                # Skip the File/Flagged-by metadata lines from the body
+                elif (stripped.startswith("**File:**")
+                      or stripped.startswith("**Flagged by:**")
+                      or stripped.startswith("**Agent:**")):
                     pass
                 elif stripped:
                     body_lines.append(stripped)
@@ -72,12 +79,13 @@ def parse_draft(draft_path: str) -> list[InlineComment]:
             if body:
                 # Format the comment for GitHub
                 severity_label = severity.upper()
-                formatted_body = f"**[{severity_label}] {title}** ({agent})\n\n{body}"
+                attribution = ", ".join(agents)
+                formatted_body = f"**[{severity_label}] {title}** ({attribution})\n\n{body}"
 
                 comments.append(InlineComment(
                     file=file_path,
                     line=line_num,
-                    agent=agent,
+                    agents=agents,
                     severity=severity,
                     title=title,
                     body=formatted_body,

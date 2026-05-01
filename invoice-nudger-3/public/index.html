@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smart Nudge Console</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <img class="brand-logo" src="/fundamental-group-logo-dark.svg" alt="Fundamental Group">
+          <div>
+            <h1>Smart Nudge Console</h1>
+            <p>Behavioral invoice prompts for the corporate media team</p>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <div class="updated" id="updatedAt">Loading data</div>
+          <button class="secondary-button" id="resetData" type="button">Reset Demo Data</button>
+        </div>
+      </header>
+
+      <nav class="view-tabs" aria-label="Dashboard views">
+        <button class="tab is-active" type="button" data-view="chat">Chat View</button>
+        <button class="tab" type="button" data-view="manager">Manager View</button>
+      </nav>
+
+      <main>
+        <section class="view is-active" id="chatView" aria-labelledby="chatTab">
+          <div class="chat-layout">
+            <aside class="inbox-panel">
+              <div class="panel-title">Nudge Queue</div>
+              <div class="queue-stats" id="queueStats"></div>
+            </aside>
+
+            <section class="chat-panel" aria-live="polite">
+              <div class="chat-header">
+                <div>
+                  <div class="channel-name">#media-finance-actions</div>
+                  <p>Smart Nudge Bot posts only items that need a named next action.</p>
+                </div>
+                <div class="status-pill" id="nudgeCount">0 active</div>
+              </div>
+              <div class="nudge-list" id="nudgeList"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="managerView" aria-labelledby="managerTab">
+          <section class="metric-grid" id="metricGrid"></section>
+
+          <section class="ranking-section">
+            <div class="section-heading">
+              <div>
+                <h2>Client Group Rankings</h2>
+                <p>Ranked by invoice completion rate, with outstanding exposure as the tie-breaker.</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Client Group</th>
+                    <th>Owner</th>
+                    <th>Completion</th>
+                    <th>Outstanding</th>
+                    <th>Active</th>
+                    <th>Oldest</th>
+                  </tr>
+                </thead>
+                <tbody id="rankingBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js"></script>
+  </body>
+</html>

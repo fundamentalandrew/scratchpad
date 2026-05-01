@@ -1,0 +1,61 @@
+{
+  "members": [
+    {"id": 1, "name": "Sarah Chen", "role": "Account Manager"},
+    {"id": 2, "name": "James Wilson", "role": "Account Manager"},
+    {"id": 3, "name": "Elena Rodriguez", "role": "Account Manager"},
+    {"id": 4, "name": "Mark Thompson", "role": "Account Manager"}
+  ],
+  "clientGroups": [
+    {"id": "CG1", "name": "Global Tech Corp", "ranking": 0.85},
+    {"id": "CG2", "name": "Luxury Retail Group", "ranking": 0.45},
+    {"id": "CG3", "name": "Future Energy Ltd", "ranking": 0.92},
+    {"id": "CG4", "name": "Health First", "ranking": 0.12}
+  ],
+  "invoices": [
+    {
+      "id": "INV-001",
+      "memberId": 1,
+      "clientGroupId": "CG1",
+      "amount": 4500,
+      "status": "unsent",
+      "daysPending": 3,
+      "clientName": "Global Tech Corp"
+    },
+    {
+      "id": "INV-002",
+      "memberId": 1,
+      "clientGroupId": "CG2",
+      "amount": 12000,
+      "status": "sent_unpaid",
+      "daysPending": 12,
+      "clientName": "Luxury Retail Group"
+    },
+    {
+      "id": "INV-003",
+      "memberId": 2,
+      "clientGroupId": "CG4",
+      "amount": 25000,
+      "status": "sent_unpaid",
+      "daysPending": 25,
+      "clientName": "Health First"
+    },
+    {
+      "id": "INV-004",
+      "memberId": 3,
+      "clientGroupId": "CG3",
+      "amount": 3200,
+      "status": "unsent",
+      "daysPending": 1,
+      "clientName": "Future Energy Ltd"
+    },
+    {
+      "id": "INV-005",
+      "memberId": 4,
+      "clientGroupId": "CG4",
+      "amount": 8500,
+      "status": "sent_unpaid",
+      "daysPending": 8,
+      "clientName": "Health First"
+    }
+  ]
+}

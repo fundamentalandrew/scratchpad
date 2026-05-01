@@ -47,7 +47,7 @@ When this skill is invoked, execute the main orchestration script `review_pr.py`
 python3 <SKILL_DIR>/../../review_pr.py <PR_NUMBER>
 ```
 
-The script implements a strict 5-phase pipeline:
+The script implements a strict 6-phase pipeline:
 
 ### Phase 1: Pre-Flight & Circuit Breaker
 - Fetches PR metadata and diff via `gh` CLI
@@ -56,25 +56,34 @@ The script implements a strict 5-phase pipeline:
 - Loads the target repo's `ARCHITECTURE.md` (if present) as the governance source of truth
 
 ### Phase 2: Parallel Map-Reduce Analysis
-- Spawns 3 subagents concurrently (System Architect, Performance Analyst, Maintainability Lead)
+- Auto-discovers reviewer identities by globbing `prompts/*.md` (each file is one identity)
+- Each prompt may include YAML frontmatter (`name`, `description`, `max_turns`, `enabled`); without it the filename is title-cased into the agent name
+- Spawns one subagent per identity concurrently (default identities: System Architect, Performance Analyst, Maintainability Lead)
 - Each subagent receives the filtered diff, architecture rules, and file context
 - Each returns structured JSON with `findings` and `questions`
 - Hard limit: MAX_RETRIES = 3 for any tool/query to prevent hallucination loops
+- **Adding a new perspective: drop a new `.md` file in `prompts/`. No Python changes needed.**
 
 ### Phase 3: Deferred Multi-Choice Protocol
 - Collects and deduplicates all subagent questions
 - Presents batched questions to the user in multi-choice format
 - User answers are fed back into the orchestrator's analysis
 
-### Phase 4: Two-Stage Human-in-the-Loop Drafting
+### Phase 4: LLM Consolidation Pass
+- Sends every raw finding from every agent to a dedicated Consolidator subagent
+- Merges near-duplicates (same root issue flagged by multiple agents) into single findings with multi-agent attribution
+- Picks the highest severity, the most specific file/line, and rewrites the analysis to integrate each agent's perspective
+- Falls back to passthrough (no merging) if the consolidator subagent fails — pipeline keeps moving
+
+### Phase 5: Two-Stage Human-in-the-Loop Drafting
 - Generates structured markdown report at `.claude/pr_review_draft.md`
-- Embeds hidden `<!-- GH_META: file=... line=... -->` tags for GitHub mapping
+- Embeds hidden `<!-- GH_META: file=... line=... agents=... -->` tags for GitHub mapping
 - Pauses for the user to review/edit the draft in their IDE
 
-### Phase 5: Automated GitHub Publishing
+### Phase 6: Automated GitHub Publishing
 - User types `publish` to proceed
 - Parses the edited draft, extracts surviving GH_META tags
-- Posts inline threaded comments on the PR via `gh api`
+- Posts inline threaded comments on the PR via `gh api` (each comment lists every agent that flagged it)
 - Cleans up the draft file
 
 ## Conflict Resolution Hierarchy
