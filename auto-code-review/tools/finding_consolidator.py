@@ -77,8 +77,8 @@ duplicates being merged. Preserve every distinct issue.
 def consolidate_findings(
     raw_findings: list[dict],
     *,
-    max_turns: int = 3,
-    timeout: int = 180,
+    max_turns: int = 15,
+    timeout: int = 1800,
 ) -> list[dict]:
     """Run the LLM consolidation pass over findings from all reviewer agents.
 

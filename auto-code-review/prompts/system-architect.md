@@ -1,7 +1,7 @@
 ---
 name: System Architect
 description: Macro-architecture, domain boundaries, abstraction leakage, and technical debt
-max_turns: 3
+max_turns: 15
 enabled: true
 ---
 

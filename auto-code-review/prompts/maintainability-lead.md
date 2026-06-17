@@ -1,7 +1,7 @@
 ---
 name: Maintainability Lead
 description: Long-term maintainability, readability cliffs, accidental complexity, evolvability
-max_turns: 3
+max_turns: 15
 enabled: true
 ---
 

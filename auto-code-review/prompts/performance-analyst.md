@@ -1,7 +1,7 @@
 ---
 name: Performance Analyst
 description: Algorithmic complexity, hot paths, allocation pressure, I/O and concurrency cost
-max_turns: 3
+max_turns: 15
 enabled: true
 ---
 

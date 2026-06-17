@@ -5,6 +5,8 @@ Handles batching, deduplication, and multi-choice presentation of subagent quest
 import sys
 from dataclasses import dataclass, field
 
+MAX_INPUT_ATTEMPTS = 5
+
 
 @dataclass
 class Question:
@@ -54,6 +56,15 @@ def present_questions(questions: list[Question]) -> list[AnsweredQuestion]:
 
     print("\n" + "=" * 70)
     print("  DEFERRED QUESTIONS FROM REVIEW AGENTS")
+    print("=" * 70)
+
+    if not sys.stdin.isatty():
+        print(f"  {len(questions)} questions were collected, but stdin is not a TTY.")
+        print("  Skipping interactive Q&A — agent assumptions will be carried into the")
+        print("  draft as-is. Run from a real terminal to answer interactively.")
+        print("=" * 70 + "\n")
+        return []
+
     print("  The agents encountered ambiguities and need your input.")
     print("=" * 70)
 
@@ -71,7 +82,8 @@ def present_questions(questions: list[Question]) -> list[AnsweredQuestion]:
         print(f"  [{len(q.options) + 1}] Custom answer")
         print()
 
-        while True:
+        resolved = False
+        for _ in range(MAX_INPUT_ATTEMPTS):
             try:
                 raw = input(f"  Your choice (1-{len(q.options) + 1}): ").strip()
                 choice = int(raw)
@@ -81,6 +93,7 @@ def present_questions(questions: list[Question]) -> list[AnsweredQuestion]:
                         answer=q.options[choice - 1],
                         answer_index=choice - 1,
                     ))
+                    resolved = True
                     break
                 elif choice == len(q.options) + 1:
                     custom = input("  Your answer: ").strip()
@@ -89,6 +102,7 @@ def present_questions(questions: list[Question]) -> list[AnsweredQuestion]:
                         answer=custom,
                         answer_index=-1,
                     ))
+                    resolved = True
                     break
                 else:
                     print(f"  Please enter a number between 1 and {len(q.options) + 1}")
@@ -97,6 +111,11 @@ def present_questions(questions: list[Question]) -> list[AnsweredQuestion]:
             except (EOFError, KeyboardInterrupt):
                 print("\n  Skipping remaining questions.")
                 return answers
+
+        if not resolved:
+            print(f"\n  No valid answer after {MAX_INPUT_ATTEMPTS} attempts. "
+                  f"Skipping remaining questions.")
+            return answers
 
     print("\n" + "=" * 70)
     print(f"  All {len(questions)} questions answered. Continuing review...")

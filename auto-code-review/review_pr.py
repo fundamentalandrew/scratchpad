@@ -40,7 +40,8 @@ from tools.finding_consolidator import consolidate_findings
 MAX_DIFF_LINES = 800
 MAX_CORE_FILES = 15
 MAX_RETRIES = 3
-DEFAULT_MAX_TURNS = 3
+MAX_INPUT_ATTEMPTS = 5
+DEFAULT_MAX_TURNS = 15
 PROMPTS_DIR = SCRIPT_DIR / "prompts"
 DRAFT_PATH = ".claude/pr_review_draft.md"
 
@@ -214,7 +215,7 @@ def _run_subagent(identity: dict, input_text: str) -> dict:
                 input=input_text,
                 capture_output=True,
                 text=True,
-                timeout=120,
+                timeout=1800,
             )
 
             output = result.stdout.strip()
@@ -435,8 +436,15 @@ def phase5_draft(
     print("=" * 60)
     print()
 
+    if not sys.stdin.isatty():
+        print(f"  Non-interactive stdin detected. Cannot prompt for publish/abort.")
+        print(f"  Draft preserved at: {draft_path}")
+        print(f"  Review it, then re-run this script from a real terminal to publish,")
+        print(f"  or post manually with the GitHub CLI.")
+        sys.exit(2)
+
     # Wait for user
-    while True:
+    for _ in range(MAX_INPUT_ATTEMPTS):
         try:
             command = input("  > ").strip().lower()
         except (EOFError, KeyboardInterrupt):
@@ -450,6 +458,10 @@ def phase5_draft(
             sys.exit(0)
         else:
             print("  Type 'publish' to post to GitHub or 'abort' to cancel.")
+
+    print(f"\n  No valid command after {MAX_INPUT_ATTEMPTS} attempts. "
+          f"Draft preserved at: {draft_path}")
+    sys.exit(2)
 
 
 # ============================================================
