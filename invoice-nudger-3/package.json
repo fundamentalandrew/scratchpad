@@ -1,0 +1,14 @@
+{
+  "name": "smart-nudge-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Prototype dashboard for a behavioral invoice nudge bot.",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node scripts/seed.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -159,3 +159,13 @@ function redactSecrets(text: string): string;
 - Non-secret content must pass through unchanged. The patterns should be specific enough to avoid false positives on normal text.
 
 **Usage**: This utility is called by the logger's verbose output path and by error formatting code to prevent accidental secret leakage in logs, stack traces, or error messages displayed to users.
+
+## Implementation Notes
+
+- **URLParseError constructor changed**: The original section-02 constructor hardcoded `Expected: https://github.com/owner/repo/pull/123` for all URLParseError instances. This was incorrect for repo URL errors. Changed to pass message through directly; callers now include format examples in their messages. Updated errors.test.ts accordingly.
+- **URLParseError re-exported** from `url-parser.ts` for API convenience, as specified in the plan.
+- **Redaction patterns refined during review**: Removed overly broad `sk-` catch-all (kept `sk-ant-` for Anthropic keys). Changed `Authorization` regex from `.+` to `\S+` to prevent over-redaction. Added standalone `Bearer` token pattern.
+- **`discoverConfigFile` exported** from url-parser for testability (plan requirement).
+- 27 tests total: 8 logger, 12 url-parser, 6 redaction, plus 1 updated error test.
+- Files created: `src/utils/logger.ts`, `src/utils/url-parser.ts`, `src/utils/redact.ts` and co-located test files.
+- Files modified: `src/utils/errors.ts` (URLParseError constructor), `src/utils/errors.test.ts` (updated test).

@@ -1,0 +1,382 @@
+const initialData = {
+  generatedAt: "2026-04-30T09:00:00.000Z",
+  updatedAt: "2026-04-30T09:00:00.000Z",
+  teamMembers: [
+    {
+      id: "tm-amara",
+      name: "Amara Singh",
+      role: "Client Partner",
+      channel: "Media Accounts"
+    },
+    {
+      id: "tm-james",
+      name: "James Whitfield",
+      role: "Account Director",
+      channel: "Media Accounts"
+    },
+    {
+      id: "tm-maya",
+      name: "Maya Chen",
+      role: "Senior Account Lead",
+      channel: "Studio Partnerships"
+    },
+    {
+      id: "tm-lucas",
+      name: "Lucas Grant",
+      role: "Commercial Manager",
+      channel: "Media Accounts"
+    },
+    {
+      id: "tm-priya",
+      name: "Priya Nair",
+      role: "Account Lead",
+      channel: "Sports Media"
+    },
+    {
+      id: "tm-elena",
+      name: "Elena Morris",
+      role: "Client Finance Lead",
+      channel: "Broadcast"
+    },
+    {
+      id: "tm-jonah",
+      name: "Jonah Price",
+      role: "Business Operations Lead",
+      channel: "Streaming"
+    }
+  ],
+  clientGroups: [
+    {
+      id: "cg-nova",
+      name: "Nova Streaming",
+      ownerId: "tm-amara",
+      intelligencePath: "https://app.internal-intelligence.com/invoices/cg-nova",
+      quarterlyCashTarget: 350000
+    },
+    {
+      id: "cg-arc",
+      name: "Arc Publishing",
+      ownerId: "tm-james",
+      intelligencePath: "https://app.internal-intelligence.com/invoices/cg-arc",
+      quarterlyCashTarget: 220000
+    },
+    {
+      id: "cg-lumina",
+      name: "Lumina Studios",
+      ownerId: "tm-maya",
+      intelligencePath: "https://app.internal-intelligence.com/invoices/cg-lumina",
+      quarterlyCashTarget: 410000
+    },
+    {
+      id: "cg-pulse",
+      name: "Pulse Audio",
+      ownerId: "tm-lucas",
+      intelligencePath: "https://app.internal-intelligence.com/invoices/cg-pulse",
+      quarterlyCashTarget: 180000
+    },
+    {
+      id: "cg-horizon",
+      name: "Horizon Sports",
+      ownerId: "tm-priya",
+      intelligencePath: "https://app.internal-intelligence.com/invoices/cg-horizon",
+      quarterlyCashTarget: 260000
+    },
+    {
+      id: "cg-orion",
+      name: "Orion News Network",
+      ownerId: "tm-elena",
+      intelligencePath: "https://app.internal-intelligence.com/invoices/cg-orion",
+      quarterlyCashTarget: 310000
+    },
+    {
+      id: "cg-summit",
+      name: "Summit Entertainment",
+      ownerId: "tm-jonah",
+      intelligencePath: "https://app.internal-intelligence.com/invoices/cg-summit",
+      quarterlyCashTarget: 295000
+    }
+  ],
+  invoices: [
+    {
+      id: "inv-1001",
+      clientGroupId: "cg-nova",
+      ownerId: "tm-amara",
+      amount: 14500,
+      status: "unsent",
+      days_pending: 2,
+      description: "April campaign production uplift"
+    },
+    {
+      id: "inv-1002",
+      clientGroupId: "cg-nova",
+      ownerId: "tm-amara",
+      amount: 8200,
+      status: "unsent",
+      days_pending: 4,
+      description: "Creator amplification fees"
+    },
+    {
+      id: "inv-1003",
+      clientGroupId: "cg-nova",
+      ownerId: "tm-amara",
+      amount: 27800,
+      status: "sent_unpaid",
+      days_pending: 20,
+      description: "Streaming launch media buy"
+    },
+    {
+      id: "inv-1004",
+      clientGroupId: "cg-nova",
+      ownerId: "tm-amara",
+      amount: 19000,
+      status: "paid",
+      days_pending: 0,
+      description: "Quarterly reporting retainer"
+    },
+    {
+      id: "inv-1005",
+      clientGroupId: "cg-nova",
+      ownerId: "tm-amara",
+      amount: 12000,
+      status: "paid",
+      days_pending: 0,
+      description: "Audience analytics support"
+    },
+    {
+      id: "inv-1010",
+      clientGroupId: "cg-arc",
+      ownerId: "tm-james",
+      amount: 11200,
+      status: "sent_unpaid",
+      days_pending: 8,
+      description: "Sponsored content placement"
+    },
+    {
+      id: "inv-1011",
+      clientGroupId: "cg-arc",
+      ownerId: "tm-james",
+      amount: 18500,
+      status: "sent_unpaid",
+      days_pending: 13,
+      description: "Magazine launch media support"
+    },
+    {
+      id: "inv-1012",
+      clientGroupId: "cg-arc",
+      ownerId: "tm-james",
+      amount: 7600,
+      status: "unsent",
+      days_pending: 9,
+      description: "Audience insights package"
+    },
+    {
+      id: "inv-1013",
+      clientGroupId: "cg-arc",
+      ownerId: "tm-james",
+      amount: 16100,
+      status: "paid",
+      days_pending: 0,
+      description: "Programmatic placement closeout"
+    },
+    {
+      id: "inv-1020",
+      clientGroupId: "cg-lumina",
+      ownerId: "tm-maya",
+      amount: 42000,
+      status: "sent_unpaid",
+      days_pending: 22,
+      description: "Studio premiere campaign"
+    },
+    {
+      id: "inv-1021",
+      clientGroupId: "cg-lumina",
+      ownerId: "tm-maya",
+      amount: 23600,
+      status: "sent_unpaid",
+      days_pending: 18,
+      description: "Influencer rights package"
+    },
+    {
+      id: "inv-1022",
+      clientGroupId: "cg-lumina",
+      ownerId: "tm-maya",
+      amount: 19000,
+      status: "sent_unpaid",
+      days_pending: 16,
+      description: "International press activation"
+    },
+    {
+      id: "inv-1023",
+      clientGroupId: "cg-lumina",
+      ownerId: "tm-maya",
+      amount: 28000,
+      status: "paid",
+      days_pending: 0,
+      description: "Talent launch media monitoring"
+    },
+    {
+      id: "inv-1030",
+      clientGroupId: "cg-pulse",
+      ownerId: "tm-lucas",
+      amount: 9700,
+      status: "sent_unpaid",
+      days_pending: 7,
+      description: "Podcast sponsorship assets"
+    },
+    {
+      id: "inv-1031",
+      clientGroupId: "cg-pulse",
+      ownerId: "tm-lucas",
+      amount: 12400,
+      status: "sent_unpaid",
+      days_pending: 11,
+      description: "Digital audio targeting uplift"
+    },
+    {
+      id: "inv-1032",
+      clientGroupId: "cg-pulse",
+      ownerId: "tm-lucas",
+      amount: 15500,
+      status: "paid",
+      days_pending: 0,
+      description: "Creator read campaign"
+    },
+    {
+      id: "inv-1033",
+      clientGroupId: "cg-pulse",
+      ownerId: "tm-lucas",
+      amount: 8300,
+      status: "paid",
+      days_pending: 0,
+      description: "Audience survey reporting"
+    },
+    {
+      id: "inv-1040",
+      clientGroupId: "cg-horizon",
+      ownerId: "tm-priya",
+      amount: 5800,
+      status: "unsent",
+      days_pending: 1,
+      description: "Match-week content package"
+    },
+    {
+      id: "inv-1041",
+      clientGroupId: "cg-horizon",
+      ownerId: "tm-priya",
+      amount: 16400,
+      status: "sent_unpaid",
+      days_pending: 10,
+      description: "Sports data syndication"
+    },
+    {
+      id: "inv-1042",
+      clientGroupId: "cg-horizon",
+      ownerId: "tm-priya",
+      amount: 11100,
+      status: "paid",
+      days_pending: 0,
+      description: "Broadcast reporting package"
+    },
+    {
+      id: "inv-1043",
+      clientGroupId: "cg-horizon",
+      ownerId: "tm-priya",
+      amount: 7300,
+      status: "paid",
+      days_pending: 0,
+      description: "Highlights monetisation review"
+    },
+    {
+      id: "inv-1044",
+      clientGroupId: "cg-horizon",
+      ownerId: "tm-priya",
+      amount: 9200,
+      status: "paid",
+      days_pending: 0,
+      description: "Weekly performance retainer"
+    },
+    {
+      id: "inv-1050",
+      clientGroupId: "cg-orion",
+      ownerId: "tm-elena",
+      amount: 18600,
+      status: "sent_unpaid",
+      days_pending: 12,
+      description: "Election hub sponsorship"
+    },
+    {
+      id: "inv-1051",
+      clientGroupId: "cg-orion",
+      ownerId: "tm-elena",
+      amount: 23300,
+      status: "paid",
+      days_pending: 0,
+      description: "Newswire integration"
+    },
+    {
+      id: "inv-1052",
+      clientGroupId: "cg-orion",
+      ownerId: "tm-elena",
+      amount: 21100,
+      status: "paid",
+      days_pending: 0,
+      description: "Brand safety review"
+    },
+    {
+      id: "inv-1053",
+      clientGroupId: "cg-orion",
+      ownerId: "tm-elena",
+      amount: 17600,
+      status: "paid",
+      days_pending: 0,
+      description: "Breaking news sponsorship audit"
+    },
+    {
+      id: "inv-1054",
+      clientGroupId: "cg-orion",
+      ownerId: "tm-elena",
+      amount: 13800,
+      status: "paid",
+      days_pending: 0,
+      description: "Commercial package reconciliation"
+    },
+    {
+      id: "inv-1060",
+      clientGroupId: "cg-summit",
+      ownerId: "tm-jonah",
+      amount: 20500,
+      status: "paid",
+      days_pending: 0,
+      description: "Premiere social flight"
+    },
+    {
+      id: "inv-1061",
+      clientGroupId: "cg-summit",
+      ownerId: "tm-jonah",
+      amount: 19000,
+      status: "paid",
+      days_pending: 0,
+      description: "Streaming platform placement"
+    },
+    {
+      id: "inv-1062",
+      clientGroupId: "cg-summit",
+      ownerId: "tm-jonah",
+      amount: 17200,
+      status: "paid",
+      days_pending: 0,
+      description: "Trailer launch support"
+    },
+    {
+      id: "inv-1063",
+      clientGroupId: "cg-summit",
+      ownerId: "tm-jonah",
+      amount: 14300,
+      status: "paid",
+      days_pending: 0,
+      description: "Entertainment press reporting"
+    }
+  ]
+};
+
+module.exports = { initialData };

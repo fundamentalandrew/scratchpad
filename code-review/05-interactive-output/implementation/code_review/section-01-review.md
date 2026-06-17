@@ -1,0 +1,11 @@
+# Code Review: Section 01 - Project Setup
+
+The implementation is largely faithful to the plan but has one structural omission and a minor concern:
+
+1. MISSING DIRECTORY STRUCTURE (Medium severity): The plan explicitly requires creating empty directories: `src/formatters/`, `src/publishers/`, `tests/formatters/`, and `tests/publishers/`. The diff contains none of these. While git does not track empty directories, the plan states these should exist. Typically a `.gitkeep` file is placed in each to preserve them in version control. Subsequent sections that add files into these directories may work fine regardless, but if any tooling or import logic expects these directories to pre-exist, it will fail.
+
+2. NO VERIFICATION EVIDENCE: The plan's verification checklist requires confirming that `npx tsc --noEmit` succeeds and `npx vitest run` executes without crashing. There is no evidence in the diff or accompanying artifacts that these commands were run. Given that `types.ts` imports from `@core/agents/schemas.js`, `@core/utils/logger.js`, and `@core/clients/github.js` via path aliases, and `tsconfig.json` paths only affect type resolution (not runtime), `tsc --noEmit` would only pass if the referenced core infrastructure files actually export the expected types (`Recommendation`, `ContextOutput`, `Logger`, `GitHubClient`). This is unverified.
+
+3. TYPE COMPLETENESS (Low severity): The `UserDecision` interface has `note?: string` which is correct per spec -- it says 'only present when action is annotate'. However, there is no TypeScript enforcement that `note` must be present when action is `annotate` or absent when action is not `annotate`. A discriminated union would be more type-safe: `type UserDecision = { action: 'accept' | 'reject' } | { action: 'annotate'; note: string }`. The current loose typing means downstream code could create an `annotate` decision without a note, or a `reject` decision with an orphaned note, both of which are logic bugs that the type system could prevent.
+
+Otherwise, `package.json`, `tsconfig.json`, `vitest.config.ts`, `src/types.ts`, and `src/index.ts` all match the plan's specifications correctly. The dependencies, compiler options, vitest configuration, type definitions, and re-exports are all as specified.

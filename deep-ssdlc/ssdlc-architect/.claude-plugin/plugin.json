@@ -1,0 +1,11 @@
+{
+  "name": "ssdlc-architect",
+  "description": "Transforms raw Product Briefs into ironclad SSDLC Developer Briefs through a 6-phase Socratic interrogation workflow driven by a Skeptical Staff Engineer & AppSec Architect persona",
+  "version": "1.0.0",
+  "author": {
+    "name": "andrew",
+    "url": "https://github.com/andrew"
+  },
+  "license": "MIT",
+  "keywords": ["ssdlc", "security", "architecture", "threat-modeling", "developer-brief", "appsec"]
+}

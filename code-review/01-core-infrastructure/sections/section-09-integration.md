@@ -159,3 +159,16 @@ For the end-to-end command handler tests, fixture data should minimally include:
 - **Claude response for ReviewOutput**: Valid object with `recommendations`, `coreDecision`, `focusAreas`
 
 All fixtures must pass their respective Zod schema validations — add a preliminary test that validates each fixture against its schema to catch fixture drift early.
+
+## Implementation Notes
+
+- **File created**: `src/integration.test.ts` (16 tests across 7 describe blocks)
+- **File modified**: `src/index.ts` — Refactored to export `createProgram()` factory function so integration tests can import the real Commander program without triggering top-level `parseAsync`. The `if (!process.env.VITEST)` guard prevents execution during tests.
+- **Deviations from plan**:
+  - CLI parsing tests use the real `createProgram()` from `src/index.ts` with mocked command handlers, rather than throwaway Commander instances. This was identified during code review as a gap.
+  - E2E command handler tests use `runReviewPipeline` from `shared.ts` directly (kept as smoke tests per user decision) rather than deeply mocking GitHub/Claude clients with fixture data.
+  - Fixture validation tests validate stub agent outputs against Zod schemas directly, rather than defining separate fixture constants. The stubs serve as the canonical fixtures.
+  - Environment variable tests use manual save/restore of `process.env` rather than `vi.stubEnv()`.
+  - Added `describe("Integration: Fixture Schema Validation")` block not in original plan to catch schema drift.
+- **Test count**: 16 integration tests, all passing
+- **Verification**: Full suite of 131 tests across 16 files passes (3 pre-existing unhandled rejections in `runner.test.ts` are not from this section)

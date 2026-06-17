@@ -229,3 +229,10 @@ Use `path.dirname()` and `path.join()` for path manipulation. Detect filesystem 
 - The `.strict()` mode on the Zod schema means typos in config keys (e.g., `"igorePatterns"`) will produce a clear error rather than being silently ignored.
 - Environment variables only map two specific secrets (`apiKey`, `githubToken`). Other config fields are not exposed via env vars to keep the surface small.
 - The `ConfigError` type is defined in section-02 (shared types / error hierarchy). Import it from there.
+
+## Implementation Notes
+
+- `partialConfigSchema` explicitly calls `.strict()` after `.partial()` to ensure unknown keys in `.codereview.json` are caught at file-validation time, not deferred to final merge validation. This was identified during code review as a potential source of confusing error messages.
+- `discoverConfigFile` is exported for independent testability, as intended by the plan's extraction.
+- 18 tests total: 5 schema tests + 13 loader tests (including CLI flags override, output deep merge, and unknown key rejection via loadConfig).
+- Files created: `src/config/schema.ts`, `src/config/loader.ts`, `src/config/schema.test.ts`, `src/config/loader.test.ts` — all matching planned paths.

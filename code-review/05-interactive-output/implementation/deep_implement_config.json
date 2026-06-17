@@ -1,0 +1,57 @@
+{
+  "plugin_root": "/home/andrew/.claude/plugins/cache/piercelamb-plugins/deep-implement/0.2.1",
+  "sections_dir": "/home/andrew/code/scratchpad/code-review/05-interactive-output/sections",
+  "target_dir": "/home/andrew/code/scratchpad/code-review",
+  "state_dir": "/home/andrew/code/scratchpad/code-review/05-interactive-output/implementation",
+  "git_root": "/home/andrew/code/scratchpad",
+  "commit_style": "simple",
+  "test_command": "uv run pytest",
+  "sections": [
+    "section-01-setup",
+    "section-02-core-github",
+    "section-03-shared-formatters",
+    "section-04-output-formatters",
+    "section-05-interactive",
+    "section-06-publishers",
+    "section-07-output-agent"
+  ],
+  "sections_state": {
+    "section-01-setup": {
+      "status": "complete",
+      "commit_hash": "39f919c"
+    },
+    "section-02-core-github": {
+      "status": "complete",
+      "commit_hash": "2e3bed7"
+    },
+    "section-03-shared-formatters": {
+      "status": "complete",
+      "commit_hash": "08395e7"
+    },
+    "section-04-output-formatters": {
+      "status": "complete",
+      "commit_hash": "079a8ce"
+    },
+    "section-05-interactive": {
+      "status": "complete",
+      "commit_hash": "a2fbbe9"
+    },
+    "section-06-publishers": {
+      "status": "complete",
+      "commit_hash": "097ba6b"
+    },
+    "section-07-output-agent": {
+      "status": "complete",
+      "commit_hash": "a8622c9"
+    }
+  },
+  "pre_commit": {
+    "present": false,
+    "type": "none",
+    "config_file": null,
+    "native_hook": null,
+    "may_modify_files": false,
+    "detected_formatters": []
+  },
+  "created_at": "2026-03-23T15:41:41.597993+00:00"
+}

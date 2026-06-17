@@ -1,0 +1,67 @@
+{
+  "plugin_root": "/home/andrew/.claude/plugins/cache/piercelamb-plugins/deep-implement/0.2.1",
+  "sections_dir": "/home/andrew/code/scratchpad/code-review/02-context-agent/sections",
+  "target_dir": "/home/andrew/code/scratchpad/code-review",
+  "state_dir": "/home/andrew/code/scratchpad/code-review/02-context-agent/implementation",
+  "git_root": "/home/andrew/code/scratchpad",
+  "commit_style": "simple",
+  "test_command": "uv run pytest",
+  "sections": [
+    "section-01-schema-extensions",
+    "section-02-github-client-extensions",
+    "section-03-file-filter",
+    "section-04-issue-parser",
+    "section-05-domain-rules-loader",
+    "section-06-tech-stack-detector",
+    "section-07-context-agent-pr-mode",
+    "section-08-context-agent-repo-mode",
+    "section-09-integration-tests"
+  ],
+  "sections_state": {
+    "section-01-schema-extensions": {
+      "status": "complete",
+      "commit_hash": "bb16dd2"
+    },
+    "section-02-github-client-extensions": {
+      "status": "complete",
+      "commit_hash": "24aa224"
+    },
+    "section-03-file-filter": {
+      "status": "complete",
+      "commit_hash": "89888cf"
+    },
+    "section-04-issue-parser": {
+      "status": "complete",
+      "commit_hash": "24f286d"
+    },
+    "section-05-domain-rules-loader": {
+      "status": "complete",
+      "commit_hash": "85b0acd"
+    },
+    "section-06-tech-stack-detector": {
+      "status": "complete",
+      "commit_hash": "fedb887"
+    },
+    "section-07-context-agent-pr-mode": {
+      "status": "complete",
+      "commit_hash": "60e61d3"
+    },
+    "section-08-context-agent-repo-mode": {
+      "status": "complete",
+      "commit_hash": "ca95f94"
+    },
+    "section-09-integration-tests": {
+      "status": "complete",
+      "commit_hash": "ae9b967"
+    }
+  },
+  "pre_commit": {
+    "present": false,
+    "type": "none",
+    "config_file": null,
+    "native_hook": null,
+    "may_modify_files": false,
+    "detected_formatters": []
+  },
+  "created_at": "2026-03-20T16:44:17.815422+00:00"
+}

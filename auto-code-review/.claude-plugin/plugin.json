@@ -1,0 +1,5 @@
+{
+  "name": "auto-code-review",
+  "version": "1.0.0",
+  "description": "Principal-engineer-grade AI code review pipeline for GitHub PRs"
+}

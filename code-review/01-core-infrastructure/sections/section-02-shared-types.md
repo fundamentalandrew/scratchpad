@@ -156,3 +156,12 @@ Each error class must call `super(message)` and set `this.name` to the class nam
 4. Create `src/utils/errors.ts` (standalone error classes)
 5. Create `src/agents/schemas.test.ts` and `src/utils/errors.test.ts`
 6. Run `npx vitest run` to verify all tests pass
+
+## Implementation Notes
+
+- **types.ts re-exports from schemas.ts** — Instead of maintaining parallel interface definitions, `types.ts` re-exports `z.infer<>` types from `schemas.ts` to keep a single source of truth. This was an auto-fix from code review.
+- **ReviewModeSchema exported** — Extracted as a named export from schemas.ts and used in ContextOutputSchema to avoid inlining the enum.
+- **AuthError includes remediation text** — Constructor appends remediation steps per plan requirement.
+- **PipelineError uses idiomatic cause** — Uses `super(msg, { cause })` ES2022 pattern.
+- **GitHubAPIError kept simple** — Decision to flesh out wrapping in section-06 when the GitHub client is built.
+- **20 tests total** — 12 schema tests (including repo-mode refinement rejection), 8 error tests. All passing.

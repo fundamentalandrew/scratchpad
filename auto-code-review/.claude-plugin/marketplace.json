@@ -1,0 +1,15 @@
+{
+  "$schema": "https://code.claude.com/schemas/marketplace.json",
+  "name": "auto-code-review",
+  "owner": {
+    "name": "Andrew Hunt"
+  },
+  "plugins": [
+    {
+      "name": "auto-code-review",
+      "source": "./",
+      "description": "Principal-engineer-grade AI code review pipeline for GitHub PRs",
+      "version": "1.0.0"
+    }
+  ]
+}

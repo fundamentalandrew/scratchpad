@@ -182,3 +182,13 @@ This aids debugging without cluttering normal output.
 - Temporarily set/restore `process.env.GITHUB_TOKEN` in tests using `beforeEach`/`afterEach` cleanup
 - Create a mock logger with `vi.fn()` for each method (`info`, `verbose`, `warn`, `error`) to assert logging behavior
 - The throttling and retry plugins do not need to be tested — they are third-party code. Focus tests on the client's own logic: mapping responses, handling edge cases, and token resolution
+
+## Implementation Notes
+
+- **Actual file paths**: `src/clients/github.ts` (implementation), `src/clients/github.test.ts` (tests)
+- **GitHubAPIError updated**: Added optional `ErrorOptions` parameter during code review so all catch blocks preserve the original error as `cause` for stack trace debugging.
+- **AuthError message**: Plan specified an exact error string, but `AuthError` class (from section-02) already appends a "Remediation:" suffix with the same content. Implementation passes a short message and lets the class handle it.
+- **Throttle handlers**: Used `Record<string, unknown>` with manual casts for plugin callback types — pragmatic given the plugin's complex generics.
+- **Test count**: 13 tests (12 from plan + 1 added during code review for GitHubAPIError wrapping with cause preservation).
+- **Mocking strategy**: Used `vi.hoisted()` with `vi.mock()` for ESM-compatible mocking of `@octokit/rest`, `@octokit/plugin-throttling`, `@octokit/plugin-retry`, and `child_process`.
+- All 13 tests pass. Full suite of 90 tests pass.
