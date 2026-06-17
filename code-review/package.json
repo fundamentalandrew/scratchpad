@@ -19,7 +19,7 @@
   "license": "ISC",
   "description": "AI-powered code review agent that distills large PRs to critical files requiring human attention",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.80.0",
+    "@anthropic-ai/sdk": "^0.91.1",
     "@inquirer/prompts": "^7.5.0",
     "@octokit/plugin-retry": "^8.1.0",
     "@octokit/plugin-throttling": "^11.0.3",
