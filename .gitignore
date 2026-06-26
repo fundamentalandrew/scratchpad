@@ -1,1 +1,11 @@
 node_modules
+
+# Secrets — never commit Aikido / API tokens
+.env
+*.env
+.env.*
+aikido-scan/.env
+aikido-scan/scan.curl
+aikido-scan/*.curl
+aikido-scan/findings.*
+aikido-scan/getPullRequestInfo.json

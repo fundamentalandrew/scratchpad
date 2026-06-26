@@ -1,0 +1,23 @@
+CREATE TABLE `bk_campaign_delivery` (
+  `id` int(10) unsigned NOT NULL,
+  `campaign_id` int(10) unsigned NOT NULL,
+  `partner_id` int(10) unsigned NOT NULL,
+  `id_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `ingest_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `super_space` int(10) unsigned NOT NULL,
+  `sub_space` int(10) unsigned NOT NULL,
+  `permission` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `id_class` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `retention` int(10) unsigned NOT NULL,
+  `ingest_methods` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `usages` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `device_group` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `context_group` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `metadata` varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
+  `sites` varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`,`campaign_id`),
+  KEY `status` (`status`),
+  KEY `campaign_id` (`campaign_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -1,0 +1,23 @@
+CREATE TABLE `li_in_mail_content` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `token_user_id` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `in_mail_content_reference` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `account` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `html_body` longtext COLLATE utf8mb4_unicode_520_ci,
+  `custom_footer` longtext COLLATE utf8mb4_unicode_520_ci,
+  `sender_display_name` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `sender_display_picture_v2` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `sender_from` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `sender_urn` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `subject` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `sub_content` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `last_modified` datetime NOT NULL,
+  `last_fetched` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_in_mail_content_reference` (`in_mail_content_reference`),
+  KEY `token_user_id` (`token_user_id`),
+  KEY `last_fetched` (`last_fetched`)
+) ENGINE=InnoDB AUTO_INCREMENT=8817 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

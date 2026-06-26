@@ -1,0 +1,23 @@
+CREATE TABLE `dbm_advertiser` (
+  `advertiserId` bigint(20) unsigned NOT NULL,
+  `displayName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `updateTime` datetime NOT NULL,
+  `entityStatus` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `timeZone` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `currencyCode` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `domainUrl` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `adServerConfig` json NOT NULL COMMENT '(DC2Type:json)',
+  `creativeConfig` json NOT NULL COMMENT '(DC2Type:json)',
+  `dataAccessConfig` json NOT NULL COMMENT '(DC2Type:json)',
+  `integrationDetails` json NOT NULL COMMENT '(DC2Type:json)',
+  `servingConfig` json NOT NULL COMMENT '(DC2Type:json)',
+  `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `partnerId` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`advertiserId`),
+  KEY `displayName` (`displayName`),
+  KEY `updateTime` (`updateTime`),
+  KEY `status` (`status`),
+  KEY `partnerId` (`partnerId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -1,0 +1,21 @@
+CREATE TABLE `report` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `advertiser_id` int(10) unsigned DEFAULT NULL,
+  `current_version` int(10) unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'live',
+  `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'standard-v1',
+  `clientUuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `aaUuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `aaToCompare` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `advertiser_id` (`advertiser_id`),
+  KEY `name` (`name`),
+  KEY `current_version` (`current_version`),
+  KEY `status` (`status`),
+  KEY `type` (`type`),
+  KEY `clientUuid` (`clientUuid`),
+  KEY `aaUuid` (`aaUuid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2045 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

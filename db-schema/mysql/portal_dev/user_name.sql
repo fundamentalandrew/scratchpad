@@ -1,0 +1,1 @@
+CREATE ALGORITHM=UNDEFINED DEFINER=`dbSchemaPortalDev`@`cloudsqlproxy~%` SQL SECURITY DEFINER VIEW `portal_dev`.`user_name` AS select `portal_dev`.`users`.`id` AS `id`,`portal_dev`.`users`.`name` AS `name`,`portal_dev`.`users`.`client_access_all` AS `allClient`,`portal_dev`.`users`.`status` AS `status` from `portal_dev`.`users`;

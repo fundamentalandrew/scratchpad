@@ -1,0 +1,20 @@
+CREATE TABLE `ai_asset_builder_campaign_brief` (
+  `uuid` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Brief UUID',
+  `campaignUuid` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'ref: campaign.uuid',
+  `versionNumber` int(11) NOT NULL COMMENT 'Sequential version number',
+  `versionName` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Custom version name (can be renamed)',
+  `content` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'JSON: brief content',
+  `originalContent` json DEFAULT NULL COMMENT 'Immutable snapshot of AI-generated content at creation time. NULL for rows created before this column existed. Used by PUT resetContent: true to revert user edits.',
+  `generationParams` text COLLATE utf8mb4_unicode_ci COMMENT 'JSON: AI generation parameters',
+  `modelUuid` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Model UUID or identifier reference',
+  `userFeedback` text COLLATE utf8mb4_unicode_ci COMMENT 'User feedback for regeneration',
+  `generatedFor` int(11) NOT NULL COMMENT 'User ID this brief was generated for',
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`uuid`),
+  UNIQUE KEY `uk_campaign_version` (`campaignUuid`,`versionNumber`),
+  KEY `idx_campaign_uuid` (`campaignUuid`),
+  KEY `idx_version_number` (`campaignUuid`,`versionNumber`),
+  KEY `idx_is_selected` (`campaignUuid`),
+  KEY `idx_created_at` (`createdAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AI-generated campaign briefs with version control';

@@ -1,0 +1,1 @@
+CREATE ALGORITHM=UNDEFINED DEFINER=`dbSchemaPortalDev`@`cloudsqlproxy~%` SQL SECURITY DEFINER VIEW `portal_dev`.`client_sector` AS select `portal_dev`.`client_setting`.`clientUuid` AS `clientUuid`,left(`portal_dev`.`client_setting`.`value`,2) AS `sector` from `portal_dev`.`client_setting` where (`portal_dev`.`client_setting`.`setting` = 'general_gicsSubIndustryCode');

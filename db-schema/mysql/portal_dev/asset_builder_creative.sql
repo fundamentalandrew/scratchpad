@@ -1,0 +1,20 @@
+CREATE TABLE `asset_builder_creative` (
+  `uuid` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `ad_uuid` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `template_unit_uuid` varchar(36) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `size_uuid` varchar(36) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tracking_code` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `creator` int(10) unsigned DEFAULT NULL,
+  `processing_status` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`uuid`),
+  UNIQUE KEY `tracking_code` (`tracking_code`),
+  KEY `ad_uuid` (`ad_uuid`),
+  KEY `name` (`name`),
+  KEY `created_at` (`created_at`),
+  KEY `creator` (`creator`),
+  KEY `template_unit_uuid` (`template_unit_uuid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -1,0 +1,20 @@
+CREATE TABLE `ai_asset_builder_document` (
+  `uuid` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Document UUID',
+  `clientUuid` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Multi-tenant isolation',
+  `documentType` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'tone_of_voice/adcopy_examples/product_documents/other',
+  `isDefault` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Client-wide default document',
+  `name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Document display name',
+  `filePath` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'GCS file path',
+  `aiSummary` text COLLATE utf8mb4_unicode_ci COMMENT 'JSON: AI-extracted summary',
+  `aiSummaryGeneratedAt` datetime DEFAULT NULL COMMENT 'When AI summary was generated',
+  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'uploading' COMMENT 'uploading/processing/active/failed/archived',
+  `uploadedBy` int(11) NOT NULL COMMENT 'User ID who uploaded document',
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`uuid`),
+  KEY `idx_client_uuid` (`clientUuid`),
+  KEY `idx_document_type` (`documentType`),
+  KEY `idx_client_type` (`clientUuid`,`documentType`),
+  KEY `idx_is_default` (`isDefault`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Supporting documents with AI summaries';

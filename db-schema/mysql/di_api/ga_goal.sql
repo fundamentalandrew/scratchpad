@@ -1,0 +1,23 @@
+CREATE TABLE `ga_goal` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `goal_id` int(11) NOT NULL,
+  `account_id` int(11) NOT NULL,
+  `view_id` int(11) NOT NULL,
+  `internal_web_property_id` int(11) NOT NULL,
+  `web_property_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `active` tinyint(1) NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url_destination` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `google_created` datetime NOT NULL,
+  `google_updated` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `goalAccountUniq` (`account_id`,`view_id`,`goal_id`),
+  KEY `goal_id` (`goal_id`),
+  KEY `account_id` (`account_id`),
+  KEY `view_id` (`view_id`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=32695110 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

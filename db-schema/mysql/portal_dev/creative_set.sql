@@ -1,0 +1,22 @@
+CREATE TABLE `creative_set` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `client_uuid` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `creative_agency_id` int(10) unsigned NOT NULL,
+  `client_product_id` int(10) unsigned NOT NULL,
+  `creator` int(10) unsigned DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `image_path` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `language_id` int(10) unsigned DEFAULT NULL,
+  `geo_id` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `client_uuid` (`client_uuid`),
+  KEY `creative_agency_id` (`creative_agency_id`),
+  KEY `client_product_id` (`client_product_id`),
+  KEY `creator` (`creator`),
+  KEY `name` (`name`),
+  KEY `created_at` (`created_at`),
+  KEY `language_id` (`language_id`),
+  KEY `geo_id` (`geo_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1315 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

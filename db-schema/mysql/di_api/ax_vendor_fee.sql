@@ -1,0 +1,21 @@
+CREATE TABLE `ax_vendor_fee` (
+  `vendorFeeId` int(10) unsigned NOT NULL,
+  `vendorId` int(10) unsigned NOT NULL,
+  `vendorFeeName` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `objectId` int(10) unsigned NOT NULL,
+  `objectType` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `currency` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `feeAmount` double unsigned DEFAULT NULL,
+  `feeType` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `readOnly` tinyint(4) DEFAULT NULL,
+  `accountId` int(10) unsigned NOT NULL,
+  `alternativeId` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
+  `active` tinyint(4) NOT NULL,
+  `buzzKey` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `createDate` date NOT NULL,
+  `updateDate` date NOT NULL,
+  `syncd` datetime NOT NULL,
+  PRIMARY KEY (`vendorFeeId`),
+  KEY `ax_vendor_fee_vendorFeeId_IDX` (`vendorFeeId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

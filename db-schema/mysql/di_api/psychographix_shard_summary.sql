@@ -1,0 +1,20 @@
+CREATE TABLE `psychographix_shard_summary` (
+  `shard_id` int(10) unsigned NOT NULL,
+  `title` text COLLATE utf8mb4_unicode_ci,
+  `summary` text COLLATE utf8mb4_unicode_ci,
+  `keywords` text COLLATE utf8mb4_unicode_ci,
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `investing_knowledge` decimal(5,2) DEFAULT NULL,
+  `investing_involvement` decimal(5,2) DEFAULT NULL,
+  `risk_tolerance` decimal(5,2) DEFAULT NULL,
+  `expert_reliance` decimal(5,2) DEFAULT NULL,
+  `buy_and_hold` decimal(5,2) DEFAULT NULL,
+  `investing_enjoyment` decimal(5,2) DEFAULT NULL,
+  `financial_comfort` decimal(5,2) DEFAULT NULL,
+  `analytical_approach` decimal(5,2) DEFAULT NULL,
+  `passive_vs_active` decimal(5,2) DEFAULT NULL,
+  `num_urls` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `auction_count` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `embedding` json DEFAULT NULL,
+  PRIMARY KEY (`shard_id`,`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

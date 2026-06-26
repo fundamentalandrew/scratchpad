@@ -1,0 +1,20 @@
+CREATE TABLE `lf_visit` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `business_id` int(11) NOT NULL,
+  `visit_id` bigint(20) NOT NULL,
+  `start_date_time` datetime NOT NULL,
+  `end_date_time` datetime NOT NULL,
+  `keywords` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pages` int(11) NOT NULL,
+  `multi` int(11) NOT NULL,
+  `referrer_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `referrer_link` varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `visit_id` (`visit_id`),
+  KEY `business_id` (`business_id`),
+  KEY `pages` (`pages`),
+  KEY `start_date_time` (`start_date_time`),
+  KEY `end_date_time` (`end_date_time`)
+) ENGINE=InnoDB AUTO_INCREMENT=1989669 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

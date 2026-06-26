@@ -1,0 +1,20 @@
+CREATE TABLE `client_asset_logo` (
+  `uuid` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `client_uuid` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tag` text COLLATE utf8_unicode_ci,
+  `width` int(11) unsigned DEFAULT NULL,
+  `height` int(11) unsigned DEFAULT NULL,
+  `aspect_ratio` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `file_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `file_size` int(11) unsigned NOT NULL,
+  `file_path` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `enabled` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `uploaded_by` int(10) unsigned DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`uuid`),
+  KEY `client_uuid` (`client_uuid`),
+  KEY `name` (`name`),
+  KEY `file_type` (`file_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

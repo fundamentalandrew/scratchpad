@@ -1,0 +1,21 @@
+CREATE TABLE `ga_custom_dimension` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `account_id` int(11) NOT NULL,
+  `web_property_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `custom_dimension_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `index` int(10) unsigned NOT NULL,
+  `scope` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `active` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `google_created` datetime NOT NULL,
+  `google_updated` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `custom_dimension` (`account_id`,`web_property_id`,`custom_dimension_id`),
+  KEY `account_id` (`account_id`),
+  KEY `web_property_id` (`web_property_id`),
+  KEY `custom_dimension_id` (`custom_dimension_id`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=38535359 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

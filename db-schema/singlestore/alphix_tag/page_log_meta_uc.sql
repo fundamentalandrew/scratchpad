@@ -1,0 +1,11 @@
+CREATE TABLE `page_log_meta_uc` (
+  `page` varchar(3500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id` int(11) DEFAULT NULL,
+  `domainId` int(11) DEFAULT NULL,
+  `meta` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `language` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  SHARD KEY `__SHARDKEY` (`id`),
+  SORT KEY `id` (`id`),
+  KEY `domain_idx` (`domainId`) USING HASH,
+  FULLTEXT USING VERSION 1 KEY `meta_idx` (`meta`)
+) AUTOSTATS_CARDINALITY_MODE=INCREMENTAL AUTOSTATS_HISTOGRAM_MODE=CREATE AUTOSTATS_SAMPLING=ON SQL_MODE='STRICT_ALL_TABLES' CHARACTER SET=`utf8mb4` COLLATE=`utf8mb4_general_ci`;

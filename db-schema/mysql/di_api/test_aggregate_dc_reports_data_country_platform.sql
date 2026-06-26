@@ -1,0 +1,21 @@
+CREATE TABLE `test_aggregate_dc_reports_data_country_platform` (
+  `advert_id` varchar(56) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `date` date NOT NULL,
+  `impressions` int(11) NOT NULL,
+  `clicks` int(11) NOT NULL,
+  `siteId` int(11) NOT NULL,
+  `size` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `creativeType` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `adType` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `country` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `platform` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  KEY `idx_test_aggregate_dc_reports_data_date` (`date`),
+  KEY `idx_test_aggregate_dc_reports_data_impressions` (`impressions`),
+  KEY `idx_test_aggregate_dc_reports_data_clicks` (`clicks`),
+  KEY `idx_test_aggregate_dc_reports_data_siteId` (`siteId`),
+  KEY `idx_test_aggregate_dc_reports_data_size` (`size`),
+  KEY `idx_test_aggregate_dc_reports_data_creativeType` (`creativeType`),
+  KEY `idx_test_aggregate_dc_reports_data_adType` (`adType`),
+  KEY `idx_test_aggregate_dc_reports_data_country` (`country`),
+  KEY `idx_test_aggregate_dc_reports_data_platform` (`platform`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

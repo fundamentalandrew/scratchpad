@@ -1,0 +1,23 @@
+CREATE TABLE `ds_fm_clients` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name_short` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `campaign_name_country_region_format` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `logo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `localLogoPath` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `company_logo_transparent_background_intell` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `company_logo_transparent_background` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `signedLogoUrl` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `signedLogoUrlDate` date DEFAULT NULL,
+  `imageWidth` int(10) unsigned DEFAULT NULL,
+  `imageHeight` int(10) unsigned DEFAULT NULL,
+  `accountNo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ds_fm_clients_id_unique` (`uuid`),
+  KEY `idx_ds_fm_clients_type_status` (`type`,`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=56161917 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

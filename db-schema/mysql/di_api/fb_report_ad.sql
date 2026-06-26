@@ -1,0 +1,20 @@
+CREATE TABLE `fb_report_ad` (
+  `date` date NOT NULL,
+  `ad_id` bigint(20) unsigned NOT NULL,
+  `creative_id` bigint(20) unsigned NOT NULL,
+  `ad_set_id` bigint(20) unsigned NOT NULL,
+  `campaign_id` bigint(20) unsigned NOT NULL,
+  `account_id` bigint(20) unsigned NOT NULL,
+  `publisher_platform` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `platform_position` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `impressions` int(11) NOT NULL,
+  `clicks` int(11) NOT NULL,
+  `cost` decimal(60,30) NOT NULL,
+  PRIMARY KEY (`date`,`ad_id`,`publisher_platform`,`platform_position`),
+  KEY `account_id` (`account_id`),
+  KEY `campaign_id` (`campaign_id`),
+  KEY `ad_set_id` (`ad_set_id`),
+  KEY `creative_id` (`creative_id`),
+  KEY `publisher_platform` (`publisher_platform`),
+  KEY `platform_position` (`platform_position`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

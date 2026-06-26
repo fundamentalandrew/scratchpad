@@ -1,0 +1,22 @@
+CREATE TABLE `li_campaign_group` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `token_user_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `campaign_group_id` int(10) unsigned NOT NULL,
+  `account_id` int(10) unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `serving_status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `run_schedule_start` datetime NOT NULL,
+  `run_schedule_end` datetime DEFAULT NULL,
+  `total_budget` decimal(13,2) DEFAULT NULL,
+  `total_budget_currency` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `last_modified` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_campaign_group` (`campaign_group_id`),
+  KEY `token_user_id` (`token_user_id`),
+  KEY `account_id` (`account_id`),
+  KEY `status` (`status`),
+  KEY `last_modified` (`last_modified`)
+) ENGINE=InnoDB AUTO_INCREMENT=365297290 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

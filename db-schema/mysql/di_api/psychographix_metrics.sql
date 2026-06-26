@@ -1,0 +1,22 @@
+CREATE TABLE `psychographix_metrics` (
+  `shard_id` int(10) unsigned NOT NULL,
+  `investing_knowledge` decimal(5,2) DEFAULT NULL,
+  `investing_involvement` decimal(5,2) DEFAULT NULL,
+  `risk_tolerance` decimal(5,2) DEFAULT NULL,
+  `expert_reliance` decimal(5,2) DEFAULT NULL,
+  `buy_and_hold` decimal(5,2) DEFAULT NULL,
+  `investing_enjoyment` decimal(5,2) DEFAULT NULL,
+  `financial_comfort` decimal(5,2) DEFAULT NULL,
+  `analytical_approach` decimal(5,2) DEFAULT NULL,
+  `passive_vs_active` decimal(5,2) DEFAULT NULL,
+  `auction_count` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `num_urls` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `impressions` bigint(20) unsigned DEFAULT NULL,
+  `clicks` bigint(20) unsigned DEFAULT NULL,
+  `costUSD` decimal(20,8) DEFAULT NULL,
+  `CPC` decimal(20,12) GENERATED ALWAYS AS ((case when (isnull(`costUSD`) or isnull(`clicks`) or (`clicks` = 0)) then NULL else (`costUSD` / `clicks`) end)) STORED,
+  `CTR` decimal(20,12) GENERATED ALWAYS AS ((case when (isnull(`clicks`) or isnull(`impressions`) or (`impressions` = 0)) then NULL else ((`clicks` / `impressions`) * 100) end)) STORED,
+  `CPM` decimal(20,10) GENERATED ALWAYS AS ((case when (isnull(`costUSD`) or isnull(`impressions`) or (`impressions` = 0)) then NULL else ((`costUSD` / `impressions`) * 1000) end)) STORED,
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (`shard_id`,`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

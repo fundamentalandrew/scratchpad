@@ -1,0 +1,20 @@
+CREATE TABLE `li_ad_in_mail` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `token_user_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `ad_in_mail_content_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `account_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `subject` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `sender_from` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `sender_display_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `html_body` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `sub_content` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `last_modified` datetime NOT NULL,
+  `last_fetched` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_adinmail` (`ad_in_mail_content_id`),
+  KEY `token_user_id` (`token_user_id`),
+  KEY `last_fetched` (`last_fetched`)
+) ENGINE=InnoDB AUTO_INCREMENT=4660 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

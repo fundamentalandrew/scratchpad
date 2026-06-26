@@ -1,0 +1,20 @@
+CREATE TABLE `firmo_office` (
+  `uuid` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `firmoMasterUuid` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `thirdParty` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `thirdPartyId` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `addressLine1` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `addressLine2` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `addressLine3` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `addressLine4` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `town` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `region` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `regionType` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `postalCode` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `countryCode` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `country` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  PRIMARY KEY (`uuid`),
+  KEY `firmoMasterUuid` (`firmoMasterUuid`),
+  KEY `firmo_office_third_party_link` (`thirdParty`,`thirdPartyId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

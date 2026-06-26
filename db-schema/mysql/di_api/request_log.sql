@@ -1,0 +1,20 @@
+CREATE TABLE `request_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `reqPath` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reqContentType` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reqMethod` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reqEncoding` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reqIp` varchar(15) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reqAuthorized` tinyint(1) DEFAULT NULL,
+  `reqAuthToken` mediumtext COLLATE utf8mb4_unicode_ci,
+  `reqUserId` int(10) unsigned DEFAULT NULL,
+  `reqSecure` tinyint(1) DEFAULT NULL,
+  `reqCode` int(10) unsigned DEFAULT NULL,
+  `reqStatus` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reqBodyPlain` mediumtext COLLATE utf8mb4_unicode_ci,
+  `reqFullPlain` mediumtext COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `request_log_id_unique` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4005 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

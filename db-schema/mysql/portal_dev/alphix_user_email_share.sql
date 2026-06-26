@@ -1,0 +1,20 @@
+CREATE TABLE `alphix_user_email_share` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(10) unsigned NOT NULL,
+  `userEmailUuid` varchar(36) NOT NULL,
+  `sharedUserId` int(10) unsigned DEFAULT NULL,
+  `shareEmailAddress` varchar(50) NOT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'subscribed',
+  `unsubscribeToken` varchar(200) DEFAULT NULL,
+  `inviteToken` varchar(200) NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `shareEmailAddress_userEmailUuid` (`shareEmailAddress`,`userEmailUuid`),
+  KEY `idx_status` (`status`) USING BTREE,
+  KEY `idx_createdAt` (`createdAt`) USING BTREE,
+  KEY `idx_updatedAt` (`updatedAt`) USING BTREE,
+  KEY `idx_unsubscribeToken` (`unsubscribeToken`) USING BTREE,
+  KEY `idx_inviteToken` (`inviteToken`) USING BTREE,
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB AUTO_INCREMENT=275 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;

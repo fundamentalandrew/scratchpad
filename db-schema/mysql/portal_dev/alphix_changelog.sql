@@ -1,0 +1,22 @@
+CREATE TABLE `alphix_changelog` (
+  `log_uuid` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  `client_uuid` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `object_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `object_reference` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sub_object_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sub_object_reference` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `change_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `action` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `old_value` longtext COLLATE utf8mb4_unicode_ci,
+  `new_value` longtext COLLATE utf8mb4_unicode_ci,
+  `old_friendly` longtext COLLATE utf8mb4_unicode_ci,
+  `new_friendly` longtext COLLATE utf8mb4_unicode_ci,
+  PRIMARY KEY (`log_uuid`),
+  KEY `user_id_idx` (`user_id`),
+  KEY `client_uuid_idx` (`client_uuid`),
+  KEY `object_type_idx` (`object_type`),
+  KEY `object_reference_idx` (`object_reference`),
+  KEY `sub_object_type_idx` (`sub_object_type`),
+  KEY `sub_object_reference_idx` (`sub_object_reference`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

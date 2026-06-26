@@ -1,0 +1,21 @@
+CREATE TABLE `ds_fm_advertisers` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `advertiser_source` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `double_click_advertiser_id` int(10) unsigned DEFAULT NULL,
+  `double_click_advertiser_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `id_client` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fundamental_invoice_office` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `include_booking_reference_placement_id_in_utm` int(10) unsigned DEFAULT NULL,
+  `account_director` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `analytics_custom_tag` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `placement_name_template` longtext COLLATE utf8_unicode_ci,
+  `id_tsf_cm_advertiser_settings_campaign_name` varchar(36) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `id_tsf_cm_advertiser_settings_placement_name` varchar(36) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `id_tsf_cm_advertiser_settings_creative_name` varchar(36) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
+  KEY `double_click_advertiser_id` (`double_click_advertiser_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3204663 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

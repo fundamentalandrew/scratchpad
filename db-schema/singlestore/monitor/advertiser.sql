@@ -1,0 +1,21 @@
+CREATE TABLE `advertiser` (
+  `id` int(10) unsigned NOT NULL,
+  `u_id` bigint(10) unsigned NOT NULL,
+  `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `fullname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `country` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `type` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `t_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `competitor` tinyint(4) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `website` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `sector` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `auto_register_users` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`u_id`),
+  KEY `id` (`id`) USING HASH,
+  KEY `fullname` (`fullname`) USING HASH,
+  KEY `sector` (`sector`) USING HASH,
+  SHARD KEY `__SHARDKEY` (`u_id`),
+  SORT KEY `__UNORDERED` (`fullname`)
+) AUTOSTATS_CARDINALITY_MODE=INCREMENTAL AUTOSTATS_HISTOGRAM_MODE=CREATE AUTOSTATS_SAMPLING=ON SQL_MODE='STRICT_ALL_TABLES' CHARACTER SET=`utf8mb4` COLLATE=`utf8mb4_general_ci`;

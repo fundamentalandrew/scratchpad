@@ -1,0 +1,21 @@
+CREATE TABLE `hits_country_weekly` (
+  `date` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `clientUuid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `url_clean_id` bigint(20) unsigned DEFAULT NULL,
+  `country` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `domain_id` bigint(20) unsigned DEFAULT NULL,
+  `sectorCode` bigint(20) unsigned DEFAULT NULL,
+  `industryGroupCode` bigint(20) unsigned DEFAULT NULL,
+  `industryCode` bigint(20) unsigned DEFAULT NULL,
+  `subIndustryCode` bigint(20) unsigned DEFAULT NULL,
+  `hits` bigint(20) unsigned DEFAULT NULL,
+  `botHits` bigint(20) unsigned DEFAULT NULL,
+  SHARD KEY `__SHARDKEY` (`url_clean_id`,`date`,`clientUuid`),
+  SORT KEY `url_clean_id` (`url_clean_id`,`date`,`clientUuid`),
+  KEY `date_idx` (`date`) USING HASH,
+  KEY `client_idx` (`clientUuid`) USING HASH,
+  KEY `url_idx` (`url_clean_id`) USING HASH,
+  KEY `country_idx` (`country`) USING HASH,
+  KEY `domain_idx` (`domain_id`) USING HASH,
+  KEY `gics_idx` (`sectorCode`,`industryGroupCode`,`industryCode`,`subIndustryCode`) USING HASH
+) AUTOSTATS_CARDINALITY_MODE=INCREMENTAL AUTOSTATS_HISTOGRAM_MODE=CREATE AUTOSTATS_SAMPLING=ON SQL_MODE='STRICT_ALL_TABLES' CHARACTER SET=`utf8mb4` COLLATE=`utf8mb4_general_ci`;

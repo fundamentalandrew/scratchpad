@@ -1,0 +1,20 @@
+CREATE TABLE `firmo_industry_classification` (
+  `uuid` varchar(36) CHARACTER SET utf8mb4 NOT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sectionCode` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sectionDescription` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `divisionCode` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `divisionDescription` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `groupCode` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `groupDescription` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  PRIMARY KEY (`uuid`),
+  UNIQUE KEY `firmo_industry_classification_type_code_uniq_IDX` (`type`,`code`) USING BTREE,
+  KEY `firmo_industry_classification_sectionCode_IDX` (`sectionCode`) USING BTREE,
+  KEY `firmo_industry_classification_divisionCode_IDX` (`divisionCode`) USING BTREE,
+  KEY `firmo_industry_classification_groupCode_IDX` (`groupCode`) USING BTREE,
+  KEY `firmo_industry_classification_code_IDX` (`code`) USING BTREE,
+  KEY `firmo_industry_classification_createdAt_IDX` (`createdAt`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

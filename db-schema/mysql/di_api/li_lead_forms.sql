@@ -1,0 +1,22 @@
+CREATE TABLE `li_lead_forms` (
+  `lead_id` bigint(20) unsigned NOT NULL,
+  `token_user_id` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `owner` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `name` varchar(256) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `state` varchar(10) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `creation_locale_country` varchar(4) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `creation_locale_language` varchar(2) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `creation_locale_variant` varchar(50) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `version_id` int(10) unsigned DEFAULT NULL,
+  `version_tag` varchar(50) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cta_label` varchar(50) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cta_target_landing_page` varchar(2000) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `privacy_url` varchar(2000) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `created` timestamp NULL DEFAULT NULL,
+  `last_modified` timestamp NULL DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`lead_id`) USING BTREE,
+  KEY `token_user_id` (`token_user_id`) USING BTREE,
+  KEY `last_modified` (`last_modified`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

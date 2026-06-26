@@ -1,0 +1,19 @@
+CREATE TABLE `psychographix_database` (
+  `db_id` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `filename` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `gcs_key` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `country_codes` json NOT NULL,
+  `hash` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `size_bytes` bigint(20) unsigned NOT NULL,
+  `generated_at` datetime DEFAULT NULL,
+  `meta` json DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `schema_version` smallint(6) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`db_id`),
+  KEY `idx_active` (`is_active`),
+  KEY `idx_end_date` (`end_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

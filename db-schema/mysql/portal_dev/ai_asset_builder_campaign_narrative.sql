@@ -1,0 +1,20 @@
+CREATE TABLE `ai_asset_builder_campaign_narrative` (
+  `uuid` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Narrative UUID',
+  `briefUuid` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'ref: campaign_brief.uuid',
+  `versionNumber` int(11) NOT NULL COMMENT 'Sequential narrative number (1-4)',
+  `versionName` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Custom version name',
+  `content` text COLLATE utf8mb4_unicode_ci COMMENT 'JSON: narrative strategic direction content',
+  `originalContent` json DEFAULT NULL COMMENT 'Immutable snapshot of AI-generated content at creation time. NULL for rows created before this column existed. Used by PUT resetContent: true to revert user edits.',
+  `generationParams` text COLLATE utf8mb4_unicode_ci COMMENT 'JSON: AI generation parameters used',
+  `modelUuid` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Model UUID used for generation',
+  `userFeedback` text COLLATE utf8mb4_unicode_ci COMMENT 'User feedback for regeneration',
+  `generatedFor` int(11) NOT NULL COMMENT 'User ID this narrative was generated for',
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`uuid`),
+  UNIQUE KEY `uk_brief_narrative` (`briefUuid`,`versionNumber`),
+  KEY `idx_brief_uuid` (`briefUuid`),
+  KEY `idx_version_number` (`briefUuid`,`versionNumber`),
+  KEY `idx_is_selected` (`briefUuid`),
+  KEY `idx_created_at` (`createdAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AI-generated campaign narratives (3-4 strategic options per brief)';

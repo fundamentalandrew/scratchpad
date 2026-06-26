@@ -1,0 +1,20 @@
+CREATE TABLE `firmo_aics_batch_output_processed` (
+  `jobUuid` varchar(36) NOT NULL,
+  `firmoUuid` varchar(36) NOT NULL,
+  `firmoName` varchar(500) DEFAULT NULL,
+  `classification` text,
+  `classification1` text,
+  `classification2` text,
+  `original_name` varchar(500) DEFAULT NULL,
+  `match_name` varchar(500) DEFAULT NULL,
+  `score` double unsigned DEFAULT NULL,
+  `match_index` int(4) unsigned DEFAULT NULL,
+  `classification3` text,
+  `firmoNameKw` varchar(500) DEFAULT NULL,
+  `kwSubIndustry` text,
+  `classification4` text,
+  `classification5` text,
+  `createdAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`jobUuid`,`firmoUuid`),
+  KEY `firmoUuid` (`firmoUuid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

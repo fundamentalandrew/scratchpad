@@ -1,0 +1,23 @@
+CREATE TABLE `alphix_user_email_preference_share` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(10) unsigned NOT NULL,
+  `emailRef` varchar(50) NOT NULL,
+  `emailUuid` varchar(36) NOT NULL,
+  `sharedUserId` int(10) unsigned DEFAULT NULL,
+  `shareEmailAddress` varchar(50) NOT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'subscribed',
+  `flag` text,
+  `emailStopToken` varchar(200) NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_emailStopToken_unique` (`emailStopToken`) USING BTREE,
+  UNIQUE KEY `userId_emailRef_emailUuid_shareEmailAddress` (`userId`,`emailRef`,`emailUuid`,`shareEmailAddress`),
+  KEY `idx_userId` (`userId`) USING BTREE,
+  KEY `idx_emailRef` (`emailRef`) USING BTREE,
+  KEY `idx_emailUuid` (`emailUuid`) USING BTREE,
+  KEY `idx_status` (`status`) USING BTREE,
+  KEY `idx_createdAt` (`createdAt`) USING BTREE,
+  KEY `idx_updatedAt` (`updatedAt`) USING BTREE,
+  KEY `idx_emailStopToken` (`emailStopToken`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;

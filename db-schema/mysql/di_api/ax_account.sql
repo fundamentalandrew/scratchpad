@@ -1,0 +1,23 @@
+CREATE TABLE `ax_account` (
+  `accountId` int(10) unsigned NOT NULL,
+  `customerId` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `alternativeId` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `accountName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `primaryAccount` tinyint(1) DEFAULT NULL,
+  `locale` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `currencyId` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `timezone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `dateFormatString` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createDate` datetime NOT NULL,
+  `updateDate` datetime NOT NULL,
+  `notes` longtext COLLATE utf8_unicode_ci,
+  `active` tinyint(1) NOT NULL,
+  `syncd` datetime NOT NULL,
+  `s3Bucket` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `augmentorUrl` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`accountId`),
+  KEY `customerId` (`customerId`),
+  KEY `alternativeId` (`alternativeId`),
+  KEY `accountName` (`accountName`),
+  KEY `active` (`active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -1,0 +1,21 @@
+CREATE TABLE `fb_account` (
+  `account_id` bigint(20) unsigned NOT NULL,
+  `account_status` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `age` decimal(15,5) DEFAULT NULL,
+  `amount_spent` decimal(15,5) DEFAULT NULL,
+  `balance` decimal(15,5) DEFAULT NULL,
+  `business_id` bigint(20) unsigned NOT NULL,
+  `business_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `currency` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `disable_reason` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `spend_cap` decimal(15,5) DEFAULT NULL,
+  `timezone_id` int(10) unsigned NOT NULL,
+  `timezone_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `timezone_offset_hours_utc` decimal(15,5) DEFAULT NULL,
+  `created_time` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`account_id`),
+  KEY `account_status` (`account_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

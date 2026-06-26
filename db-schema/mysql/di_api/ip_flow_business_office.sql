@@ -1,0 +1,20 @@
+CREATE TABLE `ip_flow_business_office` (
+  `businessId` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `officeId` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `addressLine1` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `addressLine2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `addressLine3` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `addressLine4` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `town` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `regionId` int(10) unsigned DEFAULT NULL,
+  `region` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `regionTypeId` int(10) unsigned DEFAULT NULL,
+  `regionType` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `postalCode` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `countryCode` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `country` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `lastUpdate` datetime NOT NULL,
+  PRIMARY KEY (`businessId`,`officeId`),
+  KEY `lastUpdate` (`lastUpdate`),
+  KEY `ip_flow_business_office_officeId` (`officeId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

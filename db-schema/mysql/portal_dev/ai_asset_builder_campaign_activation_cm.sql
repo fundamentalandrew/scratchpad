@@ -1,0 +1,21 @@
+CREATE TABLE `ai_asset_builder_campaign_activation_cm` (
+  `uuid` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `campaignUuid` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bookingUniqueNumber` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cmAdvertiserId` bigint(20) unsigned NOT NULL,
+  `cmCreateCampaign` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `cmCampaignId` bigint(20) unsigned DEFAULT NULL,
+  `campaignName` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `campaignNameParts` json DEFAULT NULL,
+  `startDate` date NOT NULL,
+  `endDate` date NOT NULL,
+  `stage` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `creator` bigint(20) unsigned NOT NULL,
+  `error` text COLLATE utf8mb4_unicode_ci,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`uuid`),
+  KEY `idx_acm_client_status` (`status`),
+  KEY `idx_acm_campaign` (`campaignUuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

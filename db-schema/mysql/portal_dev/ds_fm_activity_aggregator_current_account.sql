@@ -1,0 +1,21 @@
+CREATE TABLE `ds_fm_activity_aggregator_current_account` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `activity_aggregator_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `current_account_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_host` datetime DEFAULT NULL,
+  `created_by` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `modified_host` datetime DEFAULT NULL,
+  `modified_by` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `update_code` int(10) unsigned NOT NULL,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
+  UNIQUE KEY `activityCA` (`activity_aggregator_id`,`current_account_id`),
+  KEY `activity_aggregator_id` (`activity_aggregator_id`),
+  KEY `current_account_id` (`current_account_id`),
+  KEY `update_code` (`update_code`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=83695484 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

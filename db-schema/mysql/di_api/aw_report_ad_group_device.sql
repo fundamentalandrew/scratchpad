@@ -1,0 +1,23 @@
+CREATE TABLE `aw_report_ad_group_device` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `date` date DEFAULT NULL,
+  `customer_id` bigint(20) unsigned NOT NULL,
+  `campaign_id` bigint(20) unsigned NOT NULL,
+  `ad_group_id` bigint(20) unsigned NOT NULL,
+  `ad_group_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `device` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `cost` decimal(10,2) NOT NULL,
+  `impressions` int(11) NOT NULL,
+  `clicks` int(11) NOT NULL,
+  `conversions` decimal(10,2) DEFAULT NULL,
+  `all_conversions` decimal(10,2) DEFAULT NULL,
+  `network` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `network_inc_partners` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `cost_gbp` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `date` (`date`),
+  KEY `campaign_id` (`campaign_id`),
+  KEY `ad_group_id` (`ad_group_id`),
+  KEY `device` (`device`),
+  KEY `cost_gbp` (`cost_gbp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

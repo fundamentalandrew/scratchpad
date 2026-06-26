@@ -1,0 +1,23 @@
+CREATE TABLE `dc_floodlight_configuration` (
+  `floodlightConfigurationId` int(11) unsigned NOT NULL,
+  `accountId` int(11) unsigned NOT NULL,
+  `advertiserId` int(11) unsigned NOT NULL,
+  `profileId` int(11) unsigned NOT NULL,
+  `firstDayOfWeek` varchar(50) NOT NULL DEFAULT '',
+  `lookbackConfigurationClickDuration` smallint(5) NOT NULL DEFAULT '0',
+  `lookbackConfigurationPostImpressionActivitiesDuration` smallint(5) NOT NULL DEFAULT '0',
+  `naturalSearchConversionAttributionOption` varchar(50) NOT NULL DEFAULT '',
+  `omnitureIntegrationEnabled` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `omnitureCostDataEnabled` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `exposureToConversionEnabled` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `dynamicTagEnabled` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `imageTagEnabled` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `analyticsDataSharingEnabled` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `inAppAttributionTrackingEnabled` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`floodlightConfigurationId`),
+  KEY `accountId` (`accountId`),
+  KEY `advertiserId` (`advertiserId`),
+  KEY `profileId` (`profileId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

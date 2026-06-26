@@ -1,0 +1,23 @@
+CREATE TABLE `li_share` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `token_user_id` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `share_id` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `share_reference` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `owner` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `subject` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `activity` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `service_provider` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `text` longtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `share_media_category` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `title` varchar(400) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `landing_page_url` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `last_modified` datetime NOT NULL,
+  `last_fetched` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_share` (`share_id`),
+  KEY `token_user_id` (`token_user_id`),
+  KEY `last_fetched` (`last_fetched`),
+  KEY `share_reference` (`share_reference`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=633041 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
